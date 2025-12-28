@@ -5,6 +5,7 @@
       <router-link v-if="!isLoggedIn" to="/signup">Sign Up</router-link>
       <router-link v-if="isLoggedIn" to="/profile">Profile</router-link>
       <router-link v-if="!isLoggedIn" to="/login">Login</router-link>
+      <router-link v-if="isLoggedIn" to="/new-listing">New Listing</router-link>
       <a v-if="isLoggedIn" href="#" @click.prevent="logout">Logout</a>
     </nav>
     <router-view />

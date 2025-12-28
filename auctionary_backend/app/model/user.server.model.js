@@ -93,8 +93,8 @@ const getUserById = (user_id, done) => {
     db.get(sql, [user_id], (err, row) => {
         if (err) return done(err);
         if (!row) return done(404);
-        const selling_sql = 'SELECT i.item_id, i.name, i.description, i.end_date, i.creator_id, u.first_name, u.last_name FROM items i JOIN users u on i.creator_id = u.user_id WHERE i.creator_id = ?';
-        db.all(selling_sql, [user_id], (err, selling) => {
+        const selling_sql = 'SELECT i.item_id, i.name, i.description, i.end_date, i.creator_id, u.first_name, u.last_name FROM items i JOIN users u on i.creator_id = u.user_id WHERE i.creator_id = ? AND i.end_date > ?';
+        db.all(selling_sql, [user_id, Date.now()], (err, selling) => {
             if (err) return done(err);
             
             const bidding_sql = 'SELECT DISTINCT i.item_id, i.name, i.description, i.end_date, i.creator_id, u.first_name, u.last_name FROM bids b JOIN items i on b.item_id = i.item_id JOIN users u on i.creator_id = u.user_id WHERE b.user_id = ?';

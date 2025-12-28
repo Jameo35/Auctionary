@@ -7,6 +7,7 @@ import Login from "../views/pages/Login.vue";
 import NotFound from "../views/pages/Notfound.vue";
 import SingleItem from "../views/pages/SingleItem.vue";
 import Profile from "../views/pages/Profile.vue";
+import NewListing from "../views/pages/NewListing.vue";
 
 const routes = [
     { path: "/", component: Home},
@@ -14,6 +15,7 @@ const routes = [
     { path: "/login", component: Login},
     { path: "/item/:id", component: SingleItem},
     { path: "/profile/:id", component: Profile},
+    { path: "/new-listing", component: NewListing, beforeEnter: auth.ifAuthenticated},
     { path: "/profile", component: Profile, beforeEnter: auth.ifAuthenticated},  //new route for profile page
     { path: "/:pathMatch(.*)*", component: NotFound},
 ];
