@@ -23,7 +23,7 @@
           <ul v-else-if="bids.length">
             <li v-for="bid in bids" :key="bid.bid_id">
               {{ bid.first_name }} {{ bid.last_name }}
-              bid ${{ bid.amount }}
+              bid £{{ bid.amount }}
               on {{ new Date(bid.timestamp).toLocaleString() }}
             </li>
           </ul>
@@ -62,7 +62,7 @@
         <h2>Place a Bid</h2>
 
         <form @submit.prevent="placeBid">
-          <label>Bid Amount ($)</label>
+          <label>Bid Amount (£)</label>
           <input
             type="number"
             v-model.number="bidAmount"
@@ -122,7 +122,24 @@ export default {
   methods: {
     goBack() {
       this.$router.back();
-    }
+    },
+    placeBid() {
+      this.bidError = "";
+      this.bidSuccess = "";
+      coreService.placeBid(this.$route.params.id, this.bidAmount)
+        .then(() => {
+          this.bidSuccess = "Bid placed successfully!";
+          this.bidAmount = null;
+          return coreService.getBidHistory(this.$route.params.id);
+        })
+        .then((bids) => {
+          this.bids = bids;
+        })
+        .catch(error => {
+          this.bidError = error;
+        });
+      } 
+    
   }
 }
 </script>

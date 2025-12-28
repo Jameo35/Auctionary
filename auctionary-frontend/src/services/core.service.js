@@ -100,10 +100,37 @@ const createItem = (itemData) => {
     })
 }
 
+const placeBid = (itemId, bidAmount) => {
+    const token = localStorage.getItem('session_token');
+    return fetch(`http://localhost:3333/item/${itemId}/bid`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Authorization': `${token}`
+        },
+        body: JSON.stringify({ amount: bidAmount }),
+    })
+    .then((response) => {
+        if (response.status === 201){
+            return response.json()
+        }else{
+            throw 'Something went wrong'
+        }
+    })
+    .then((resJson) => {
+        return resJson
+    })
+    .catch((err) => {
+        console.log("Err",err)
+        return Promise.reject(err)
+    })
+}
+
 export const coreService = {
     searchItems,
     getSingleItem,
     getBidHistory,
     getQuestionsForItem,
-    createItem
+    createItem,
+    placeBid
 }
