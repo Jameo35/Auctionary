@@ -10,6 +10,10 @@
         <div v-else class="card item-card">
           <p>Item Name: {{ item.name }}</p>
           <p>Item description: {{ item.description }}</p>
+          <p>Starting Bid: £{{ item.starting_bid }}</p>
+          <p>Current Bid: £{{ item.current_bid || 'No bids yet' }}</p>
+          <p>Auction Started: {{ new Date(item.start_date).toLocaleString() }}</p>
+          <p>Auction Ends: {{ new Date(item.end_date).toLocaleString() }}</p>
           <p>All Item Info for Debugging</p>
           <pre>{{ item }}</pre>
         </div>
@@ -70,7 +74,7 @@
         <h2>Seller Details</h2>
         <p><strong>Name:</strong> {{ item.first_name }} {{ item.last_name }}</p>
         <router-link :to="`/profile/${item.creator_id}`">
-          See other items by this seller
+          See this seller's profile
         </router-link>
       </div>
 
@@ -192,6 +196,23 @@ export default {
         })
         .catch(error => {
           this.questionError = error;
+        });
+    },
+    submitAnswer(questionId) {
+      const answerText = this.answers[questionId];
+      if (!answerText) {
+        return;
+      }
+      questionService.submitAnswer(questionId, answerText)
+        .then(() => {
+          this.answers[questionId] = "";
+          return coreService.getQuestionsForItem(this.$route.params.id);
+        })
+        .then((questions) => {
+          this.questions = questions;
+        })
+        .catch(error => {
+          this.errorQuestions = error;
         });
     }
   },
