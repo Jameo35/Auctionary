@@ -1,9 +1,25 @@
-const searchItems = (query = "") => {
+const searchItems = ({ q, status, limit, offset, token } = {}) => {
     let url = "http://localhost:3333/search";
-    if (query) {
-        url += `?q=${encodeURIComponent(query)}`;
+    const params = [];
+    if (q) {
+        params.push(`q=${encodeURIComponent(q)}`);
     }
-    return fetch(url)
+    if (status){
+        params.push(`status=${status}`);
+    }
+    if (limit) {
+        params.push(`limit=${limit}`);
+    }
+    if (offset){
+        params.push(`offset=${offset}`);
+    }
+    if (params.length) {
+        url += `?${params.join('&')}`;
+    }
+
+    const headers = {};
+    if (token) headers['X-Authorization'] = token;
+    return fetch(url, { headers })
     .then((response) => {
         if (response.status === 200){
             return response.json()

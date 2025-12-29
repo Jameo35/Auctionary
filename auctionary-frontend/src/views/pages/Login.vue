@@ -1,5 +1,5 @@
 <template>
-    <div class="login-page">
+    <div :class="{'login-page': isStandalone }">
         <div class ="login-card card" v-if="!isLoggedIn">
             <div>
                 <h1>Login</h1>
@@ -13,6 +13,7 @@
                     <div v-show="submitted && !password">Password is required</div>
                     <br /><br />
                     <button>Login</button>
+                    <button href="/signup" @click.prevent="$router.push('/signup')">Sign Up</button>
                 </form>
                 <div v-if="error">{{ error }} </div>
             </div>
@@ -35,6 +36,12 @@ import * as EmailValidator from 'email-validator';
                 submitted: false,
                 isLoggedIn: false
 
+            }
+        },
+        props: {
+            isStandalone: {
+                type: Boolean,
+                default: false
             }
         },
         methods: {

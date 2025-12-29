@@ -2,6 +2,7 @@
   <div>
     <nav>
       <router-link to="/">Home</router-link>
+      <router-link v-if="isLoggedIn" to="/browse">Browse</router-link>
       <router-link v-if="!isLoggedIn" to="/signup">Sign Up</router-link>
       <router-link v-if="isLoggedIn" to="/profile">Profile</router-link>
       <router-link v-if="!isLoggedIn" to="/login">Login</router-link>

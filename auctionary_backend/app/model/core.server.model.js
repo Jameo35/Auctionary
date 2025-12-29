@@ -233,7 +233,7 @@ const searchItems = (query, done) => {
         params.push(user_id);
     }
     sql += ' ORDER BY i.start_date DESC LIMIT ? OFFSET ?';
-    params.push(parseInt(limit, 20));
+    params.push(parseInt(limit, 10));
     params.push(parseInt(offset, 0));
     console.log(user_id);
 

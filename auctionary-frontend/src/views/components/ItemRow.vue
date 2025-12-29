@@ -11,10 +11,6 @@
     </td>
 
     <td>
-        £{{ item.current_bid || item.starting_bid }}
-    </td>
-
-    <td>
       {{ formatDate(item.end_date) }}
     </td>
   </tr>

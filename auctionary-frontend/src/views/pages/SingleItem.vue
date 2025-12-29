@@ -32,7 +32,7 @@
           <div v-if="errorBids" class="error">{{ errorBids }}</div>
         </div>
 
-        <div class="card questions">
+        <div class="card questions-card">
           <h2>Questions & Answers</h2>
           <em v-if="loadingQuestions">Loading...</em>
 
@@ -40,6 +40,22 @@
             <li v-for="question in questions" :key="question.question_id">
               <strong>Q:</strong> {{ question.question_text }}<br />
               <strong>A:</strong> {{ question.answer_text || "No answer yet." }}
+
+               <div
+                  v-if="isOwner && !question.answer_text"
+                  class="answer-form"
+                >
+                  <input
+                    type="text"
+                    v-model="answers[question.question_id]"
+                    placeholder="Write your answer..."
+                    required
+                  ></input>
+
+                  <button @click="submitAnswer(question.question_id)">
+                    Submit Answer
+                  </button>
+                </div>
             </li>
           </ul>
 
@@ -76,16 +92,35 @@
           <button type="submit">Place Bid</button>
         </form>
       </div>
+
+      <div class="card question-form-card">
+        <h2>Ask a Question</h2>
+
+        <form @submit.prevent="submitQuestion">
+          <label>Your Question</label>
+          <input
+            type="text"
+            v-model="newQuestion"
+            placeholder="Type your question here..."
+            required
+          ></input>
+          <div v-if="questionError" class="error">{{ questionError }}</div>
+          <div v-if="questionSuccess" class="success">{{ questionSuccess }}</div>
+          <button type="submit">Submit Question</button>
+        </form>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { coreService } from '../../services/core.service.js';   
+import { questionService } from '../../services/question.service.js';
+import { auth } from '../../services/authentication.js';
 export default {
   data() {
     return {
-      items: [],
+      item: {},
       error: "",
       loading: true,
       loadingBids: true,
@@ -96,7 +131,11 @@ export default {
       errorQuestions: "",
       bidAmount: null,
       bidError: "",
-      bidSuccess: ""
+      bidSuccess: "",
+      newQuestion: "",
+      questionError: "",
+      questionSuccess: "",
+      answers: {}
     }
   },
   mounted() {
@@ -138,9 +177,30 @@ export default {
         .catch(error => {
           this.bidError = error;
         });
-      } 
-    
+      } ,
+    submitQuestion() {
+      this.questionError = "";
+      this.questionSuccess = "";
+      questionService.submitQuestion(this.$route.params.id, this.newQuestion)
+        .then(() => {
+          this.questionSuccess = "Question submitted successfully!";
+          this.newQuestion = "";
+          return coreService.getQuestionsForItem(this.$route.params.id);
+        })
+        .then((questions) => {
+          this.questions = questions;
+        })
+        .catch(error => {
+          this.questionError = error;
+        });
+    }
+  },
+  computed: {
+    isOwner(){
+      const userId = auth.getUserId();
+      return Number(userId) === Number(this.item.creator_id);
   }
+}
 }
 </script>
 

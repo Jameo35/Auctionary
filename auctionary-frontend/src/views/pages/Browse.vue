@@ -1,8 +1,7 @@
 <template>
   <div class="home">
     <div class="page-title">
-      <h1 v-if="isLoggedIn">Welcome back to Auctionary!</h1>
-      <h1 v-else>Welcome to Auctionary!</h1>
+      <h1>Browse Auctions</h1>
     </div>
     <div class="search-box card">
       <input
@@ -11,13 +10,26 @@
         placeholder="Search auctions..."
         @keyup.enter="queryItems"
       />
+      <select v-model="statusFilter">
+        <option value="">All Statuses</option>
+        <option value="BID">Bid</option>
+        <option value="OPEN">Open</option>
+        <option value="ARCHIVE">Archive</option>
+      </select>
+
+      <select v-model.number="limit">
+        <option :value="5">5</option>
+        <option :value="10">10</option>
+        <option :value="20">20</option>
+        <option :value="50">50</option>
+      </select>
+
       <button @click="queryItems">Search</button>
       <button class="clear-btn" @click="clearSearch">Clear</button>
     </div>
     <div class ="content">
       <section class="AuctionList card">
-        <h1> Recently Added Auctions </h1>
-        <p> To browse more items at once and with more search options, please log in or sign up!</p>
+        <h1>Browse All Auctions</h1>
         <em v-if="loading">Loading...</em>
           <table v-if="items.length" class="items-table">
             <thead>
@@ -43,7 +55,7 @@
                 <strong>Error: </strong> {{ error }}
             </div>
       </section>
-      <div class="Login" v-if="!isLoggedIn">
+      <div v-if="!isLoggedIn">
         <Login />
       </div>
     </div>
@@ -65,13 +77,13 @@ export default {
       items: [],
       error: "",
       loading: true,
-      isLoggedIn: false
+      isLoggedIn: false,
+      searchQuery: "",
+      statusFilter: ""
     }
   },
   mounted() {
-    coreService.searchItems({
-      limit: 5
-    })
+    coreService.searchItems({})
       .then(items => {
         this.items = items;
         this.loading = false;
@@ -86,9 +98,12 @@ export default {
   methods: {
     queryItems(){
         const q = this.searchQuery.trim() || undefined;
+        const status = this.statusFilter || undefined;
+        const limit = this.limit || undefined;
+        const token = localStorage.getItem('session_token') || undefined;
         this.loading = true;
         this.error = "";
-        coreService.searchItems({q, limit: 5})
+        coreService.searchItems({q, status, limit, token})
           .then(items => {
             this.items = items;
             this.loading = false;

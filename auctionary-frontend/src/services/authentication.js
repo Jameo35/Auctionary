@@ -13,6 +13,10 @@ export const authState = reactive({
     isLoggedIn: !!localStorage.getItem('session_token')
 });
 
+const getUserId = () => {
+    return localStorage.getItem('user_id');
+}
+
 const login = () => {
     authState.isLoggedIn = true;
 }
@@ -31,5 +35,6 @@ export const auth = {
     ifAuthenticated,
     isAuthenticated,
     login,
-    logout
+    logout,
+    getUserId
 };
