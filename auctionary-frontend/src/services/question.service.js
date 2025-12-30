@@ -12,21 +12,22 @@ const submitQuestion = (itemId, questionText) => {
             })
         }
     )
-    .then((response) => {
+    .then(response => {
+        return response.json().then(data => {
         if (response.status === 200){
-            return response.json()
+            return data;
         }else{
-            throw 'Something went wrong'
+            return Promise.reject(data);
         }
-    })
-    .then((resJson) => {
-        return resJson
+    });
     })
     .catch((err) => {
         console.log("Err",err)
         return Promise.reject(err)
     })
-}
+}   
+
+
 
 const submitAnswer = (questionId, answerText) => {
     const token = localStorage.getItem('session_token');
