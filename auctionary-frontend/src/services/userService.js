@@ -44,14 +44,14 @@ const signup = (firstName, lastName, email, password) => {
             })
         }
     )
-    .then((response) => {
+    .then(response => {
         return response.json().then(data => {
-            if (response.ok) {
-                return data;
-            } else {
-                throw 'Unsuccessful signup attempt';
-            }
-        });
+        if (response.status === 201){
+            return data;
+        }else{
+            return Promise.reject(data.error_message);
+        }
+    });
     })
     .catch((err) => {
         console.log("Err",err)

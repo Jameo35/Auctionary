@@ -1,7 +1,7 @@
 <template>
     <div class="signup-page">
         <div class ="signup-card card" v-if="isLoggedIn">
-            <h1>Create Account</h1>
+            <h1>Create New Listing</h1>
             <form @submit.prevent="handleSubmit">
                 <label for="name">Item Name:</label>
                 <input type="text" name="name" v-model="name" />
@@ -67,7 +67,7 @@ import { coreService } from '@/services/core.service.js';
                         this.submitted = false;
                     })
                     .catch((err) => {
-                        this.error = "Failed to create item. Please try again.";
+                        this.error = err;
                         this.submitted = false;
                     });
             }

@@ -1,6 +1,8 @@
 const items = require('../model/core.server.model');
 const users = require('../model/user.server.model');
 const joi = require('joi');
+const Filter = require('bad-words');
+const filter = new Filter();
 
 const createItem = (req, res) => {
   const schema = joi.object({
@@ -15,6 +17,10 @@ const createItem = (req, res) => {
 
   if (!items.checkDateValidity(end_date)) {
     return res.status(400).json({ error_message: 'End date must be in the future' });
+  }
+
+  if (filter.isProfane(name) || filter.isProfane(description)) {
+    return  res.status(400).json({ error_message: 'Inappropriate language is not allowed in the item name and/or description.' });
   }
 
   const token = req.headers['x-authorization'];

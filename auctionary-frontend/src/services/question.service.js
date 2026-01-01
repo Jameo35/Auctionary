@@ -43,15 +43,14 @@ const submitAnswer = (questionId, answerText) => {
             })
         }
     )
-    .then((response) => {
+    .then(response => {
+        return response.json().then(data => {
         if (response.status === 200){
-            return response.json()
+            return data;
         }else{
-            throw 'Something went wrong'
+            return Promise.reject(data.error_message);
         }
-    })
-    .then((resJson) => {
-        return resJson
+    });
     })
     .catch((err) => {
         console.log("Err",err)

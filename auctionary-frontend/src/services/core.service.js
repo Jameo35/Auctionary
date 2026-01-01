@@ -105,14 +105,12 @@ const createItem = (itemData) => {
         if (response.status === 201){
             return data;
         }else{
-            const errorMessage = data.error_message || 'An unknown error occurred';
-            return Promise.reject(errorMessage);
-            
+            return Promise.reject(data.error_message);
         }
     });
     })
     .catch((err) => {
-        console.log("Error caught:", err);
+        console.log("Err",err)
         return Promise.reject(err)
     })
 }

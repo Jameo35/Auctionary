@@ -33,7 +33,7 @@ const askQuestion = (req, res) => {
     const question_text = req.body.question_text;
 
     if(filter.isProfane(question_text)){
-        return  res.status(400).json({ error_message: 'Inappropriate language is not allowed in questions' });
+        return  res.status(400).json({ error_message: 'Inappropriate language is not allowed in questions.' });
     }
 
     questions.askQuestion(item_id, user_id, question_text, (err, question_id) => {
@@ -65,7 +65,7 @@ const answerQuestion = (req, res) => {
     const answer_text = req.body.answer_text;
 
     if(filter.isProfane(answer_text)){
-        return  res.status(400).json({ error_message: 'Inappropriate language is not allowed in questions' });
+        return  res.status(400).json({ error_message: 'Inappropriate language is not allowed in question answers.' });
     }
 
     questions.answerQuestion(question_id, user_id, answer_text, (err) => {
