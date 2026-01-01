@@ -10,14 +10,14 @@
         placeholder="Search auctions..."
         @keyup.enter="queryItems(true)"
       />
-      <select v-model="statusFilter">
+      <select v-model="statusFilter" class="styled-select">
         <option value="">All Statuses</option>
         <option value="BID">Bid</option>
         <option value="OPEN">Open</option>
         <option value="ARCHIVE">Archive</option>
       </select>
 
-      <select v-model.number="limit">
+      <select v-model.number="limit" class="styled-select">
         <option :value="5">5</option>
         <option :value="10">10</option>
         <option :value="20">20</option>

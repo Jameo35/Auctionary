@@ -127,7 +127,7 @@ const placeBid = (itemId, bidAmount) => {
     })
     .then(response => {
         return response.json().then(data => {
-        if (response.status === 200){
+        if (response.status === 201){
             return data;
         }else{
             return Promise.reject(data.error_message);
