@@ -8,7 +8,7 @@
       <h2>Items for Sale</h2>
       <ul>
         <li v-for="item in items" :key="item.item_id">
-          <router-link :to="'/item/' + item.item_id">
+          <router-link :to="'/item/' + item.item_id" class="item-link">
             {{ item.name }}
           </router-link>
         </li>
@@ -19,26 +19,40 @@
       <p>No Items found for this seller.</p>
     </div>
 
-    <div v-if="bidding.length" class="card profile-card">
+    <div v-if="activeBids.length" class="card profile-card">
       <h2>Items {{ seller.first_name }} is Bidding On</h2>
       <ul>
-        <li v-for="item in bidding" :key="item.item_id">
-          <router-link :to="'/item/' + item.item_id">
+        <li v-for="item in activeBids" :key="item.item_id">
+          <router-link :to="'/item/' + item.item_id" class="item-link">
             {{ item.name }}
           </router-link>
         </li>
       </ul>
     </div>
     <div v-else class="card profile-card">
-      <h2>Items {{ seller.first_name }} is Bidding On</h2>
+      <h2>Items {{ seller.first_name }} is currently bidding on</h2>
       <p>This seller is not bidding on anything.</p>
+    </div>
+
+        <div v-if="endedBids.length" class="card profile-card">
+      <h2>Items {{ seller.first_name }} has bidded on</h2>
+      <ul>
+        <li v-for="item in endedBids" :key="item.item_id">
+          <router-link :to="'/item/' + item.item_id" class="item-link">{{ item.name }}</router-link>
+          <span> — ended {{ new Date(item.end_date).toLocaleString() }}</span>
+        </li>
+      </ul>
+    </div>
+    <div v-else class="card profile-card">
+      <h2>Ended Bids</h2>
+      <p>No ended bids.</p>
     </div>
 
     <div v-if="auctions_ended.length" class="card profile-card">
       <h2>Items {{ seller.first_name }}'s Auctions Have Ended</h2>
       <ul>
         <li v-for="item in auctions_ended" :key="item.item_id">
-          <router-link :to="'/item/' + item.item_id">
+          <router-link :to="'/item/' + item.item_id" class="item-link">
             {{ item.name }}
           </router-link>
         </li>
@@ -61,6 +75,8 @@ export default {
       items: [],
       bidding: [],
       auctions_ended: [],
+      activeBids: [],
+      endedBids: [],
       loading: true,
       error: ''
     }
@@ -92,8 +108,14 @@ methods: {
         last_name: user.last_name,
         user_id: user.user_id
       };
+      const now = Date.now();
+      console.log(now);
       this.items = user.selling || [];
-      this.bidding = user.bidding_on || [];
+
+      const allBiddingItems = user.bidding_on || [];
+      this.activeBids = allBiddingItems.filter(item => item.end_date > now);
+      this.endedBids = allBiddingItems.filter(item => item.end_date < now);
+
       this.auctions_ended = user.auctions_ended || [];
       this.loading = false;
     })

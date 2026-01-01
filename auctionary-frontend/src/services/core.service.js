@@ -100,18 +100,19 @@ const createItem = (itemData) => {
         },
         body: JSON.stringify(itemData),
     })
-    .then((response) => {
+    .then(response => {
+        return response.json().then(data => {
         if (response.status === 201){
-            return response.json()
+            return data;
         }else{
-            throw 'Something went wrong'
+            const errorMessage = data.error_message || 'An unknown error occurred';
+            return Promise.reject(errorMessage);
+            
         }
-    })
-    .then((resJson) => {
-        return resJson
+    });
     })
     .catch((err) => {
-        console.log("Err",err)
+        console.log("Error caught:", err);
         return Promise.reject(err)
     })
 }
@@ -126,15 +127,14 @@ const placeBid = (itemId, bidAmount) => {
         },
         body: JSON.stringify({ amount: bidAmount }),
     })
-    .then((response) => {
-        if (response.status === 201){
-            return response.json()
+    .then(response => {
+        return response.json().then(data => {
+        if (response.status === 200){
+            return data;
         }else{
-            throw 'Something went wrong'
+            return Promise.reject(data.error_message);
         }
-    })
-    .then((resJson) => {
-        return resJson
+    });
     })
     .catch((err) => {
         console.log("Err",err)

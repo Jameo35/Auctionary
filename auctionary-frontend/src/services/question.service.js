@@ -17,7 +17,7 @@ const submitQuestion = (itemId, questionText) => {
         if (response.status === 200){
             return data;
         }else{
-            return Promise.reject(data);
+            return Promise.reject(data.error_message);
         }
     });
     })

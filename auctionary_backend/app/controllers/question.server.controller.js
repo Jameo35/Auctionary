@@ -1,5 +1,8 @@
 const joi = require('joi');
 const questions = require('../model/question.server.model');
+const Filter = require('bad-words');
+const filter = new Filter();
+
 
 const getQuestionsForItem = (req, res) => {
     const item_id = parseInt(req.params.item_id, 10);
@@ -29,6 +32,10 @@ const askQuestion = (req, res) => {
     const item_id = parseInt(req.params.item_id, 10);
     const question_text = req.body.question_text;
 
+    if(filter.isProfane(question_text)){
+        return  res.status(400).json({ error_message: 'Inappropriate language is not allowed in questions' });
+    }
+
     questions.askQuestion(item_id, user_id, question_text, (err, question_id) => {
         if (err) {
             if (err === 404) {
@@ -56,6 +63,10 @@ const answerQuestion = (req, res) => {
     const user_id = req.user_id;
     const question_id = parseInt(req.params.question_id, 10);
     const answer_text = req.body.answer_text;
+
+    if(filter.isProfane(answer_text)){
+        return  res.status(400).json({ error_message: 'Inappropriate language is not allowed in questions' });
+    }
 
     questions.answerQuestion(question_id, user_id, answer_text, (err) => {
         if (err) {

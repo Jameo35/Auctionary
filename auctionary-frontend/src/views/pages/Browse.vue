@@ -8,7 +8,7 @@
         type="text"
         v-model="searchQuery"
         placeholder="Search auctions..."
-        @keyup.enter="queryItems"
+        @keyup.enter="queryItems(true)"
       />
       <select v-model="statusFilter">
         <option value="">All Statuses</option>
@@ -51,6 +51,15 @@
             No auctions found.
           </div>
 
+          <div class="pagination">
+            <button @click="prevPage" v-if="offset > 0">
+              Previous
+            </button>
+            <button @click="nextPage" v-if="hasNextPage">
+              Next
+            </button>
+          </div>
+
             <div v-if="error">
                 <strong>Error: </strong> {{ error }}
             </div>
@@ -79,16 +88,15 @@ export default {
       loading: true,
       isLoggedIn: false,
       searchQuery: "",
-      statusFilter: ""
+      statusFilter: "",
+      limit: 20,
+      offset: 0,
+      hasNextPage: true
+
     }
   },
   mounted() {
-    coreService.searchItems({})
-      .then(items => {
-        this.items = items;
-        this.loading = false;
-      })
-      .catch(error => this.error = error)
+    this.queryItems(true);
   },
   computed:{
     isLoggedIn(){
@@ -96,27 +104,51 @@ export default {
     }
   },
   methods: {
-    queryItems(){
+    queryItems(reset = false){
+    if (reset) {
+    this.offset = 0;
+    }
         const q = this.searchQuery.trim() || undefined;
         const status = this.statusFilter || undefined;
         const limit = this.limit || undefined;
+        const offset = this.offset;
         const token = localStorage.getItem('session_token') || undefined;
         this.loading = true;
         this.error = "";
-        coreService.searchItems({q, status, limit, token})
+        const fetchLimit = this.limit + 1;
+
+        coreService.searchItems({q, status, limit: fetchLimit, offset, token})
           .then(items => {
-            this.items = items;
-            this.loading = false;
-          })
-          .catch(error => {
-            this.error = error;
-            this.loading = false;
-          });
+            if (items.length > this.limit) {
+                    this.hasNextPage = true;
+                    this.items = items.slice(0, this.limit);
+                  } else {
+                    this.hasNextPage = false;
+                    this.items = items;
+                  }
+                  this.loading = false;
+                })
+                .catch(error => {
+                  this.error = error;
+                  this.loading = false;
+                });
       },
-    clearSearch(){
-      this.searchQuery = "";
-      this.queryItems();
-    }
+      clearSearch(){
+        this.searchQuery = "";
+        this.queryItems();
+      },
+      nextPage() {
+      if (this.hasNextPage) {
+        this.offset += this.limit;
+        this.queryItems();
+        }
+      },
+      prevPage() {
+        if (this.offset >= this.limit) {
+          this.offset -= this.limit;
+          this.queryItems();
+        }
+      }
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <tr>
     <td>
-      <router-link :to="`/item/${item.item_id}`">
+      <router-link :to="`/item/${item.item_id}`" class="item-link">
         {{ item.name }}
       </router-link>
     </td>

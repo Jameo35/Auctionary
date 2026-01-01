@@ -17,7 +17,8 @@
     <div class ="content">
       <section class="AuctionList card">
         <h1> Recently Added Auctions </h1>
-        <p> To browse more items at once and with more search options, please log in or sign up!</p>
+        <p v-if="!isLoggedIn"> To browse more items at once and with more search options, please log in or sign up!</p>
+        <p v-else> To Browse with more functionality please use the <router-link to="/browse" class="item-link">Browse</router-link> page </p>
         <em v-if="loading">Loading...</em>
           <table v-if="items.length" class="items-table">
             <thead>
