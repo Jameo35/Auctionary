@@ -14,6 +14,10 @@
           <p>Current Bid: £{{ item.current_bid || 'No bids yet' }}</p>
           <p>Auction Started: {{ new Date(item.start_date).toLocaleString() }}</p>
           <p>Auction Ends: {{ new Date(item.end_date).toLocaleString() }}</p>
+          <span>Current Bid Holder: </span>
+          <router-link :to="`/profile/${item.current_bid_holder.user_id}`">
+            {{ item.current_bid_holder.first_name }} {{ item.current_bid_holder.last_name }}
+          </router-link>
           <p>All Item Info for Debugging</p>
           <pre>{{ item }}</pre>
         </div>
@@ -121,6 +125,7 @@
 import { coreService } from '../../services/core.service.js';   
 import { questionService } from '../../services/question.service.js';
 import { auth } from '../../services/authentication.js';
+import router from '@/router/index.js';
 export default {
   data() {
     return {
