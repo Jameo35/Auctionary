@@ -10,10 +10,11 @@ const createItem = (req, res) => {
     description: joi.string().min(1).max(500).required(),
     starting_bid: joi.number().min(0).required(),
     end_date: joi.number().required(),
+    categories: joi.array().items(joi.number().integer()).min(1).optional()
     });
     const { error } = schema.validate(req.body);
     if (error) return res.status(400).json({ error_message: error.details[0].message });
-    const { name, description, starting_bid, end_date } = req.body;
+    const { name, description, starting_bid, end_date, categories } = req.body;
 
   if (!items.checkDateValidity(end_date)) {
     return res.status(400).json({ error_message: 'End date must be in the future' });
@@ -32,14 +33,23 @@ const createItem = (req, res) => {
       }
       return res.status(500).json({ error_message: 'Internal server error' });
     }
-    
-    items.addNewItem({ name, description, starting_bid, end_date, user_id }, (err, item_id) => {
+
+    items.addNewItem({ name, description, starting_bid, end_date, user_id, categories }, (err, item_id) => {
         if (err) {
             return res.status(500).json({ error_message: 'Internal server error' });
         }
-        return res.status(201).json({ item_id });
+        if (categories && categories.length > 0) {
+          items.addItemCategories(item_id, categories, (err) => {
+          if (err) {
+              return res.status(500).json({ error_message: 'Failed to associate categories' });
+          }
+          return res.status(201).json({ item_id });
+        });
+        } else {
+          return res.status(201).json({ item_id });
+        }
+      });
     });
-});
 };
 
 const getItem = (req, res) => {

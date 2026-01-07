@@ -34,7 +34,9 @@ const getItem = (item_id, done) => {
   b.amount AS current_bid,
   b.user_id AS current_bid_holder_id,
   bh.first_name AS current_bid_holder_first_name,
-  bh.last_name AS current_bid_holder_last_name
+  bh.last_name AS current_bid_holder_last_name,
+  c.category_id,
+  c.name AS category_name
 FROM items i
 JOIN users u ON i.creator_id = u.user_id
 LEFT JOIN (
@@ -47,36 +49,48 @@ LEFT JOIN (
   ) b2 ON b1.item_id = b2.item_id AND b1.amount = b2.max_amount
 ) b ON b.item_id = i.item_id
 LEFT JOIN users bh ON b.user_id = bh.user_id
+LEFT JOIN item_categories ic ON i.item_id = ic.item_id
+LEFT JOIN categories c ON ic.category_id = c.category_id
 WHERE i.item_id = ?;
   `;
     const values = [item_id];
     
-    db.get(sql, values, (err, row) => {
+    db.all(sql, values, (err, rows) => {
         if (err) {
             
             return done(err);
         }
-        if (!row) {
+        if (rows.length === 0) {
             return done(null, null);
         }
         const item = {
-            item_id: row.item_id,
-            name: row.name,
-            description: row.description,
-            starting_bid: row.starting_bid,
-            start_date: row.start_date,
-            end_date: row.end_date,
-            creator_id: row.creator_id,
-            first_name: row.creator_first_name,
-            last_name: row.creator_last_name,
-            current_bid: row.current_bid !== null ? row.current_bid : row.starting_bid,
-            current_bid_holder: row.current_bid !== null ?
+            item_id: rows[0].item_id,
+            name: rows[0].name,
+            description: rows[0].description,
+            starting_bid: rows[0].starting_bid,
+            start_date: rows[0].start_date,
+            end_date: rows[0].end_date,
+            creator_id: rows[0].creator_id,
+            first_name: rows[0].creator_first_name,
+            last_name: rows[0].creator_last_name,
+            current_bid: rows[0].current_bid !== null ? rows[0].current_bid : rows[0].starting_bid,
+            current_bid_holder: rows[0].current_bid !== null ?
             {
-              user_id: row.current_bid_holder_id,
-              first_name: row.current_bid_holder_first_name,
-              last_name: row.current_bid_holder_last_name,
+              user_id: rows[0].current_bid_holder_id,
+              first_name: rows[0].current_bid_holder_first_name,
+              last_name: rows[0].current_bid_holder_last_name,
             }  : null,
+            categories: rows[0].category_id !== null ? [] : null
         };
+
+        rows.forEach(row => {
+            if (row.category_id !== null) {
+                item.categories.push({
+                    category_id: row.category_id,
+                    name: row.category_name
+                });
+            }
+        });
         return done(null, item);
     });
 };
@@ -256,7 +270,29 @@ const searchItems = (query, done) => {
         return done(null, items);
     });
 };
-    
+
+const addItemCategories = (item_id, categories, done) => {
+    if (categories.length === 0 || !categories) {
+        return done(null);
+    }
+    const sql = 'INSERT INTO item_categories (item_id, category_id) VALUES (?, ?)';
+    const stmt = db.prepare(sql);
+    categories.forEach((category_id) => {
+        stmt.run(item_id, category_id, (err) => {
+            if (err) {
+                return done(err);
+            }
+        });
+    });
+    stmt.finalize((err) => {
+        if (err) {
+            return done(err);
+        }
+        return done(null);
+    });
+};
+
+
     
 
 
@@ -268,5 +304,6 @@ module.exports = {
     makeBid:makeBid,
     bidHistory:bidHistory,
     checkItemExists:checkItemExists,
-    searchItems:searchItems
+    searchItems:searchItems,
+    addItemCategories:addItemCategories
 };
