@@ -1,4 +1,4 @@
-const searchItems = ({ q, status, limit, offset, token } = {}) => {
+const searchItems = ({ q, status, limit, offset, token, category } = {}) => {
     let url = "http://localhost:3333/search";
     const params = [];
     if (q) {
@@ -6,6 +6,9 @@ const searchItems = ({ q, status, limit, offset, token } = {}) => {
     }
     if (status){
         params.push(`status=${status}`);
+    }
+    if(category){
+        params.push(`category=${category}`);
     }
     if (limit) {
         params.push(`limit=${limit}`);

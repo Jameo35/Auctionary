@@ -3,72 +3,43 @@
     <h1>{{ seller.first_name }} {{ seller.last_name }}'s Items</h1>
     <em v-if="loading">Loading...</em>
     <div v-if="error" class="error">{{ error }}</div>
+    
+    <ItemList 
+      :title="'Items for Sale'"
+      :items="items"
+      noItemsMessage="No items found for this seller."
+    />
 
-    <div v-if="items.length" class="card profile-card">
-      <h2>Items for Sale</h2>
-      <ul>
-        <li v-for="item in items" :key="item.item_id">
-          <router-link :to="'/item/' + item.item_id" class="item-link">
-            {{ item.name }}
-          </router-link>
-        </li>
-      </ul>
-    </div>
-    <div v-else class="card profile-card">
-      <h2> Items for Sale </h2>
-      <p>No Items found for this seller.</p>
-    </div>
+    <ItemList 
+      :title="`Items ${seller.first_name} is Bidding On`"
+      :items="activeBids"
+      noItemsMessage="No items found for this seller."
+    />
 
-    <div v-if="activeBids.length" class="card profile-card">
-      <h2>Items {{ seller.first_name }} is Bidding On</h2>
-      <ul>
-        <li v-for="item in activeBids" :key="item.item_id">
-          <router-link :to="'/item/' + item.item_id" class="item-link">
-            {{ item.name }}
-          </router-link>
-        </li>
-      </ul>
-    </div>
-    <div v-else class="card profile-card">
-      <h2>Items {{ seller.first_name }} is currently bidding on</h2>
-      <p>This seller is not bidding on anything.</p>
-    </div>
 
-        <div v-if="endedBids.length" class="card profile-card">
-      <h2>Items {{ seller.first_name }} has bidded on</h2>
-      <ul>
-        <li v-for="item in endedBids" :key="item.item_id">
-          <router-link :to="'/item/' + item.item_id" class="item-link">{{ item.name }}</router-link>
-          <span> — ended {{ new Date(item.end_date).toLocaleString() }}</span>
-        </li>
-      </ul>
-    </div>
-    <div v-else class="card profile-card">
-      <h2>Ended Bids</h2>
-      <p>No ended bids.</p>
-    </div>
+    <ItemList 
+      :title="`Items ${seller.first_name} has bidded on (Ended)`"
+      :items="endedBids"
+      noItemsMessage="No ended bids found for this user."
+    />
 
-    <div v-if="auctions_ended.length" class="card profile-card">
-      <h2>Items {{ seller.first_name }}'s Auctions Have Ended</h2>
-      <ul>
-        <li v-for="item in auctions_ended" :key="item.item_id">
-          <router-link :to="'/item/' + item.item_id" class="item-link">
-            {{ item.name }}
-          </router-link>
-        </li>
-      </ul>
-    </div>
-    <div v-else class="card profile-card">
-      <h2>Items {{ seller.first_name }}'s Auctions Have Ended</h2>
-      <p>This seller has no ended auctions.</p>
-    </div>  </div>
+    <ItemList 
+      :title="`${seller.first_name}'s ended Auctions`"
+      :items="auctions_ended"
+      noItemsMessage="This seller has no ended auctions."
+    />
+  </div>
 </template>
 
 <script>
 
-import { userService } from '../../services/userService.js';   
+import { userService } from '../../services/userService.js';  
+import ItemList from '../components/ItemList.vue'; 
 
 export default {
+  components: {
+    ItemList
+  },
   data() {
     return {
       seller: {},

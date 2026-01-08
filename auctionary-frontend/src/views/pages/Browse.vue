@@ -17,6 +17,13 @@
         <option value="ARCHIVE">Archive</option>
       </select>
 
+      <select v-model="selectedCategory" class="styled-select">
+        <option value="">All Categories</option>
+        <option v-for="category in categories" :key="category.category_id" :value="category.category_id">
+          {{ category.name }}
+        </option>
+      </select>
+
       <select v-model.number="limit" class="styled-select">
         <option :value="5">5</option>
         <option :value="10">10</option>
@@ -36,6 +43,8 @@
               <tr>
                 <th>Item</th>
                 <th>Seller</th>
+                <th>Current Bid</th>
+                <th>Auction Start Date & Time</th>
                 <th>Auction End Date & Time</th>
               </tr>
             </thead>
@@ -89,6 +98,8 @@ export default {
       isLoggedIn: false,
       searchQuery: "",
       statusFilter: "",
+      categoriesList: [],
+      selectedCategory: "",
       limit: 20,
       offset: 0,
       hasNextPage: true
@@ -97,6 +108,15 @@ export default {
   },
   mounted() {
     this.queryItems(true);
+
+    coreService.getCategories()
+      .then((response) => {
+        console.log('Fetched categories:', response);
+        this.categories = response.categories;
+      })
+      .catch((err) => {
+        console.error('Error fetching categories:', err);
+      });
   },
   computed:{
     isLoggedIn(){
@@ -112,12 +132,12 @@ export default {
         const status = this.statusFilter || undefined;
         const limit = this.limit || undefined;
         const offset = this.offset;
+        const category = this.selectedCategory || undefined;
         const token = localStorage.getItem('session_token') || undefined;
         this.loading = true;
         this.error = "";
         const fetchLimit = this.limit + 1;
-
-        coreService.searchItems({q, status, limit: fetchLimit, offset, token})
+        coreService.searchItems({q, status, limit: fetchLimit, offset, token, category})
           .then(items => {
             if (items.length > this.limit) {
                     this.hasNextPage = true;

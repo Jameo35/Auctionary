@@ -1,8 +1,8 @@
 <template>
   <div class="home">
     <div class="page-title">
-      <h1 v-if="isLoggedIn">Welcome back to Auctionary!</h1>
-      <h1 v-else>Welcome to Auctionary!</h1>
+      <h1 v-if="isLoggedIn">Welcome back to the Pro Shop!</h1>
+      <h1 v-else>Welcome to the Pro Shop!</h1>
     </div>
     <div class="search-box card">
       <input
@@ -25,7 +25,10 @@
               <tr>
                 <th>Item</th>
                 <th>Seller</th>
+                <th>Current Bid</th>
+                <th>Auction Start Date & Time</th>
                 <th>Auction End Date & Time</th>
+                
               </tr>
             </thead>
             <tbody>
@@ -34,7 +37,7 @@
                   :key="item.item_id"
                   :item="item"
                 />
-              </tbody>
+            </tbody>
           </table>
           <div v-else>
             No auctions found.
@@ -70,12 +73,12 @@ export default {
     }
   },
   mounted() {
-    coreService.searchItems({
-      limit: 5
+    coreService.searchItems({limit: 5
     })
       .then(items => {
         this.items = items;
         this.loading = false;
+        console.log('Fetched items:', items);
       })
       .catch(error => this.error = error)
   },

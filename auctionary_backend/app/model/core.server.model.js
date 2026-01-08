@@ -203,34 +203,44 @@ const searchItems = (query, done) => {
     }
     let sql = `
     SELECT 
-      i.item_id,
-      i.name,
-      i.description,
-      i.starting_bid,
-      i.start_date,
-      i.end_date,
-      i.creator_id,
-      u.first_name AS creator_first_name,
-      u.last_name AS creator_last_name,
-      b.amount AS current_bid,
-      c.category_id,
-      c.name AS category_name
-    FROM items i
+        i.item_id,
+        i.name,
+        i.description,
+        i.starting_bid,
+        i.start_date,
+        i.end_date,
+        i.creator_id,
+        u.first_name AS creator_first_name,
+        u.last_name AS creator_last_name,
+        b.amount AS current_bid,
+        c.category_id,
+        c.name AS category_name
+        FROM (
+        SELECT DISTINCT
+            i.item_id
+        FROM items i
+        ORDER BY i.start_date DESC
+        LIMIT ? OFFSET ?
+    ) limited_items
+    JOIN items i ON i.item_id = limited_items.item_id
     JOIN users u ON i.creator_id = u.user_id
     LEFT JOIN (
-      SELECT b1.*
-      FROM bids b1
-      JOIN (
-        SELECT item_id, MAX(amount) AS max_amount
-        FROM bids
-        GROUP BY item_id
-      ) b2 ON b1.item_id = b2.item_id AND b1.amount = b2.max_amount
+        SELECT b1.*
+        FROM bids b1
+        JOIN (
+            SELECT item_id, MAX(amount) AS max_amount
+            FROM bids
+            GROUP BY item_id
+        ) b2 ON b1.item_id = b2.item_id AND b1.amount = b2.max_amount
     ) b ON b.item_id = i.item_id
     LEFT JOIN item_categories ic ON i.item_id = ic.item_id
     LEFT JOIN categories c ON ic.category_id = c.category_id
     WHERE 1=1
     `;
+
     const params = [];
+    params.push(parseInt(limit, 10));
+    params.push(parseInt(offset, 0));
 
     if (q) {
         sql += ' AND (i.name LIKE ?)';
@@ -253,33 +263,31 @@ const searchItems = (query, done) => {
     }
 
     if (category) {
-        sql += ' AND i.item_id IN (SELECT item_id FROM item_categories WHERE category_id = ?)';
+        sql += ' AND c.category_id = ?';
         params.push(category);
     }
 
-    sql += ' ORDER BY i.start_date DESC LIMIT ? OFFSET ?';
-    params.push(parseInt(limit, 10));
-    params.push(parseInt(offset, 0));
+    sql += ' ORDER BY i.start_date DESC';
+
     console.log(user_id);
+    console.log(params);
 
         db.all(sql, params, (err, rows) => {
         if (err) {
+            console.log(err);
             return done(err);
         }
 
-        // Create an array of items and their associated categories
         const items = [];
         let currentItem = null;
 
+
         rows.forEach(row => {
-            // If we haven't encountered this item yet, create a new object for it
             if (!currentItem || currentItem.item_id !== row.item_id) {
-                // If there is an existing item, push it to the array
                 if (currentItem) {
                     items.push(currentItem);
                 }
 
-                // Create a new item object
                 currentItem = {
                     item_id: row.item_id,
                     name: row.name,
@@ -300,6 +308,7 @@ const searchItems = (query, done) => {
                     name: row.category_name
                 });
             }
+
         });
         if (currentItem) {
             items.push(currentItem);
