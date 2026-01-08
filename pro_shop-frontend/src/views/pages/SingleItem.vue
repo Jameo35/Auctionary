@@ -4,14 +4,14 @@
       <div class="item-details">
         <button class="back-btn" @click="goBack">Back</button>
 
-        <h1>Item Details</h1>
         <em v-if="loading">Loading...</em>
 
         <div v-else class="card item-card">
+          <h1>Item Details</h1>
           <p>Item Name: {{ item.name }}</p>
           <p>Item description: {{ item.description }}</p>
           <p>Starting Bid: £{{ item.starting_bid }}</p>
-          <p>Current Bid: £{{ item.current_bid || 'No bids yet' }}</p>
+          <p>Current Bid: {{ displayCurrentBid }}</p>
           <p>Auction Started: {{ new Date(item.start_date).toLocaleString() }}</p>
           <p>Auction Ends: {{ new Date(item.end_date).toLocaleString() }}</p>
           <p>Current Bid Holder: 
@@ -22,18 +22,28 @@
             </span>
             <span v-else>No bids yet</span>
           </p>
-          <p>All Item Info for Debugging</p>
-          <pre>{{ item }}</pre>
+          <p>
+            Categories:
+            <span v-if="item.categories && item.categories.length">
+              <span
+                v-for="(category, index) in item.categories"
+                :key="category.category_id"
+              >
+                {{ category.name }}<span v-if="index < item.categories.length - 1">, </span>
+              </span>
+            </span>
+            <span v-else>None</span>
+          </p>          
         </div>
 
         <div v-if="error" class="error">{{ error }}</div>
 
         <div class="card bid-history-card">
-          <h2>Bid History</h2>
+          <h2>Last 5 Bids</h2>
           <em v-if="loadingBids">Loading...</em>
 
           <ul v-else-if="bids.length">
-            <li v-for="bid in bids" :key="bid.bid_id">
+            <li v-for="bid in bids.slice(-5).reverse()" :key="bid.bid_id">
               {{ bid.first_name }} {{ bid.last_name }}
               bid £{{ bid.amount }}
               on {{ new Date(bid.timestamp).toLocaleString() }}
@@ -129,7 +139,6 @@
 import { coreService } from '../../services/core.service.js';   
 import { questionService } from '../../services/question.service.js';
 import { auth } from '../../services/authentication.js';
-import router from '@/router/index.js';
 export default {
   data() {
     return {
@@ -182,10 +191,11 @@ export default {
         .then(() => {
           this.bidSuccess = "Bid placed successfully!";
           this.bidAmount = null;
-          return coreService.getBidHistory(this.$route.params.id);
+          return Promise.all([coreService.getBidHistory(this.$route.params.id), coreService.getSingleItem(this.$route.params.id)]);
         })
-        .then((bids) => {
+        .then(([bids, item]) => {
           this.bids = bids;
+          this.item = item;
         })
         .catch(error => {
           this.bidError = error;
@@ -232,6 +242,15 @@ export default {
   },
   isAuctionActive(){
     return Date.now() > new Date(this.item.end_date).getTime();
+  },
+    displayCurrentBid() {
+    if (
+      this.item.current_bid == null ||
+      Number(this.item.current_bid) === Number(this.item.starting_bid)
+    ) {
+      return 'No bids yet';
+    }
+    return `£${this.item.current_bid}`;
   }
 },
 };

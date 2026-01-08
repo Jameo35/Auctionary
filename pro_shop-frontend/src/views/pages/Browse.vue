@@ -12,9 +12,9 @@
       />
       <select v-model="statusFilter" class="styled-select">
         <option value="">All Statuses</option>
-        <option value="BID">Bid</option>
-        <option value="OPEN">Open</option>
-        <option value="ARCHIVE">Archive</option>
+        <option value="BID">Items Bid On</option>
+        <option value="OPEN">Items Selling</option>
+        <option value="ARCHIVE">Ended Auctions</option>
       </select>
 
       <select v-model="selectedCategory" class="styled-select">
@@ -155,6 +155,8 @@ export default {
       },
       clearSearch(){
         this.searchQuery = "";
+        this.statusFilter = "";
+        this.selectedCategory = "";
         this.queryItems();
       },
       nextPage() {

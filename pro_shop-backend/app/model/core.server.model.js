@@ -159,7 +159,6 @@ const bidHistory = (item_id, done) => {
         if (err) {
             return done(err);
         }
-        
     const bidsSQL = 'SELECT b.item_id, b.amount, b.timestamp, u.user_id, u.first_name, u.last_name from bids b JOIN users u ON b.user_id = u.user_id WHERE item_id = ? ORDER BY amount DESC';
     const values = [item_id];
     

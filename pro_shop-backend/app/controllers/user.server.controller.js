@@ -50,7 +50,6 @@ const loginUser = (req, res) => {
       if (err && err !== 404) {
         return res.status(500).json({ error_message: 'Internal server error' });
       }
-
       if (token) {
         return res.status(200).json({ user_id, session_token: token });
       }
