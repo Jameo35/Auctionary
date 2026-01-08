@@ -4,7 +4,7 @@ const getAllCategories = (req, res) => {
         if (err) {
             return res.status(500).json({ error_message: 'Internal server error' });
         }
-        return res.status(200).json(categories);
+        return res.status(200).json({ categories });
     });
 };
 

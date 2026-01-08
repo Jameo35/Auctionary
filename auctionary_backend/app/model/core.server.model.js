@@ -16,6 +16,7 @@ const addNewItem = (item, done) => {
 
 const checkDateValidity = (end_date) => {
     const currentDate = Date.now();
+    console.log('Current Date:', currentDate, 'End Date:', end_date);
     return end_date > currentDate;
 };
 
@@ -195,7 +196,7 @@ const checkItemExists = (item_id, done) => {
 };
 
 const searchItems = (query, done) => {
-    const {q, status, limit = 20, offset = 0, user_id} = query;
+    const {q, status, limit = 20, offset = 0, user_id, category} = query;
 
     if (status && user_id === null) {
         return done(400);
@@ -211,7 +212,9 @@ const searchItems = (query, done) => {
       i.creator_id,
       u.first_name AS creator_first_name,
       u.last_name AS creator_last_name,
-      b.amount AS current_bid
+      b.amount AS current_bid,
+      c.category_id,
+      c.name AS category_name
     FROM items i
     JOIN users u ON i.creator_id = u.user_id
     LEFT JOIN (
@@ -223,6 +226,8 @@ const searchItems = (query, done) => {
         GROUP BY item_id
       ) b2 ON b1.item_id = b2.item_id AND b1.amount = b2.max_amount
     ) b ON b.item_id = i.item_id
+    LEFT JOIN item_categories ic ON i.item_id = ic.item_id
+    LEFT JOIN categories c ON ic.category_id = c.category_id
     WHERE 1=1
     `;
     const params = [];
@@ -246,27 +251,60 @@ const searchItems = (query, done) => {
         params.push(currentTime);
         params.push(user_id);
     }
+
+    if (category) {
+        sql += ' AND i.item_id IN (SELECT item_id FROM item_categories WHERE category_id = ?)';
+        params.push(category);
+    }
+
     sql += ' ORDER BY i.start_date DESC LIMIT ? OFFSET ?';
     params.push(parseInt(limit, 10));
     params.push(parseInt(offset, 0));
     console.log(user_id);
 
-    db.all(sql, params, (err, rows) => {
+        db.all(sql, params, (err, rows) => {
         if (err) {
             return done(err);
         }
-        const items = rows.map(row => ({
-            item_id: row.item_id,
-            name: row.name,
-            description: row.description,
-            starting_bid: row.starting_bid,
-            start_date: row.start_date,
-            end_date: row.end_date,
-            creator_id: row.creator_id,
-            first_name: row.creator_first_name,
-            last_name: row.creator_last_name,
-            current_bid: row.current_bid !== null ? row.current_bid : row.starting_bid,
-        }));
+
+        // Create an array of items and their associated categories
+        const items = [];
+        let currentItem = null;
+
+        rows.forEach(row => {
+            // If we haven't encountered this item yet, create a new object for it
+            if (!currentItem || currentItem.item_id !== row.item_id) {
+                // If there is an existing item, push it to the array
+                if (currentItem) {
+                    items.push(currentItem);
+                }
+
+                // Create a new item object
+                currentItem = {
+                    item_id: row.item_id,
+                    name: row.name,
+                    description: row.description,
+                    starting_bid: row.starting_bid,
+                    start_date: row.start_date,
+                    end_date: row.end_date,
+                    creator_id: row.creator_id,
+                    first_name: row.creator_first_name,
+                    last_name: row.creator_last_name,
+                    current_bid: row.current_bid !== null ? row.current_bid : row.starting_bid,
+                    categories: []
+                };
+            }
+            if (row.category_id !== null) {
+                currentItem.categories.push({
+                    category_id: row.category_id,
+                    name: row.category_name
+                });
+            }
+        });
+        if (currentItem) {
+            items.push(currentItem);
+        }
+
         return done(null, items);
     });
 };

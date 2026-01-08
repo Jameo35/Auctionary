@@ -15,6 +15,16 @@
                 <label for="end_date">End Date: </label>
                 <input type="datetime-local" name="end_date" v-model="end_date" />
                 <div v-if="submitted && !end_date">End date is required</div>
+
+                <label for="categories">Categories</label>
+                <div class="custom-select">
+                    <select multiple v-model="selected_categories">
+                        <option v-for="category in categories" :key="category.category_id" :value="category.category_id">
+                            {{ category.name }}
+                        </option>
+                    </select>
+                </div>
+
                 <button>Create Item</button>
             </form>
             <div v-if="error" class="error">{{ error }} </div>
@@ -34,16 +44,29 @@ import { coreService } from '@/services/core.service.js';
                 starting_bid: null,
                 end_date: '',
                 submitted: false,
+                categories: [],
+                selected_categories: [],
                 error: '',
                 success: ''
             }
+        },
+        mounted(){
+            coreService.getCategories()
+            .then((response) => {
+                console.log('Fetched categories:', response);
+                this.categories = response.categories;
+            })
+            .catch((err) => {
+                console.error('Error fetching categories:', err);
+            });
+
         },
         methods: {
             handleSubmit(e){
                 this.submitted = true
                 this.error = ""
                 this.success = ""
-                const{ name, description, starting_bid, end_date} = this
+                const{ name, description, starting_bid, end_date, selected_categories} = this
 
                 if(!(name && description && starting_bid && end_date)){
                     return;
@@ -53,7 +76,8 @@ import { coreService } from '@/services/core.service.js';
                     name: name,
                     description: description,
                     starting_bid: starting_bid,
-                    end_date: endDateEpoch
+                    end_date: endDateEpoch,
+                    categories: selected_categories
                 };
 
                 console.log(itemData);
@@ -63,6 +87,7 @@ import { coreService } from '@/services/core.service.js';
                         this.name = '';
                         this.description = '';
                         this.starting_bid = null;
+                        this.selected_categories = [];
                         this.end_date = '';
                         this.submitted = false;
                     })

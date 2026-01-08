@@ -106,10 +106,10 @@ const bidHistory = (req, res) => {
 };
 
 const searchItems = (req, res) => {
-  const {q, status, limit, offset} = req.query;
+  const {q, status, limit, offset, category} = req.query;
   const user_id = req.user_id || null;
 
-  items.searchItems({q, status, limit, offset, user_id}, (err, itemList) => {
+  items.searchItems({q, status, limit, offset, category, user_id}, (err, itemList) => {
     if (err) {
       if (err === 400) {
         return res.status(400).json({ error_message: 'Bad Request' });

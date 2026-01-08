@@ -14,10 +14,14 @@
           <p>Current Bid: £{{ item.current_bid || 'No bids yet' }}</p>
           <p>Auction Started: {{ new Date(item.start_date).toLocaleString() }}</p>
           <p>Auction Ends: {{ new Date(item.end_date).toLocaleString() }}</p>
-          <span>Current Bid Holder: </span>
-          <router-link :to="`/profile/${item.current_bid_holder.user_id}`">
-            {{ item.current_bid_holder.first_name }} {{ item.current_bid_holder.last_name }}
-          </router-link>
+          <p>Current Bid Holder: 
+            <span v-if="item.current_bid_holder">
+              <router-link :to="`/profile/${item.current_bid_holder.user_id}`">
+                {{ item.current_bid_holder.first_name }} {{ item.current_bid_holder.last_name }}
+              </router-link>
+            </span>
+            <span v-else>No bids yet</span>
+          </p>
           <p>All Item Info for Debugging</p>
           <pre>{{ item }}</pre>
         </div>
