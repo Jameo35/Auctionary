@@ -86,7 +86,7 @@
         </router-link>
       </div>
 
-      <div class="card bid-form-card">
+      <div class="card bid-form-card" v-if="!isAuctionActive">
         <h2>Place a Bid</h2>
 
         <form @submit.prevent="placeBid">
@@ -105,7 +105,7 @@
         </form>
       </div>
 
-      <div class="card question-form-card">
+      <div class="card question-form-card" v-if="!isAuctionActive">
         <h2>Ask a Question</h2>
 
         <form @submit.prevent="submitQuestion">
@@ -229,9 +229,12 @@ export default {
     isOwner(){
       const userId = auth.getUserId();
       return Number(userId) === Number(this.item.creator_id);
+  },
+  isAuctionActive(){
+    return Date.now() > new Date(this.item.end_date).getTime();
   }
-}
-}
+},
+};
 </script>
 
 

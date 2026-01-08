@@ -28,7 +28,6 @@
                 <th>Current Bid</th>
                 <th>Auction Start Date & Time</th>
                 <th>Auction End Date & Time</th>
-                
               </tr>
             </thead>
             <tbody>

@@ -450,3 +450,68 @@ em {
   border-color: var(--color-primary);
   box-shadow: 0 0 3px rgba(0,123,255,0.5);
 }
+
+.custom-select {
+  width: 100%;
+  max-width: 300px;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+}
+
+.custom-select select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #444;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #444;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  box-sizing: border-box;
+  resize: none; 
+  height: 150px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-select select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.custom-select select option {
+  padding: 8px;
+  font-size: 14px;
+  background-color: #fff;
+  color: #444;
+  transition: background-color 0.3s ease;
+}
+
+.custom-select select option:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.custom-select select option:checked {
+  background-color: #007bff;
+  color: white;
+}
+
+.custom-select select::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-select select::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+
+.custom-select select::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+.custom-select select::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+
