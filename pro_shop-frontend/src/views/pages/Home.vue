@@ -32,7 +32,6 @@
           <div v-else>
             No auctions found.
           </div>
-
             <div v-if="error">
                 <strong>Error: </strong> {{ error }}
             </div>

@@ -12,11 +12,15 @@
       <router-link v-if="isLoggedIn" to="/profile" class="nav-link">Profile</router-link>
       <router-link v-if="!isLoggedIn" to="/login" class="nav-link">Login</router-link>
       <router-link v-if="isLoggedIn" to="/new-listing" class="nav-link">New Listing</router-link>
-      <a class="font-medium text-accent no-underline
-         router-link-active:text-primary text-2xl" v-if="isLoggedIn" href="#" @click.prevent="logout">Logout</a>
+      <a class="nav-link" v-if="isLoggedIn" href="#" @click.prevent="logout">Logout</a>
       </div>
     </nav>
     <router-view class="flex-1 flex" />
+    <section class="flex justify-center items-center pb-8">
+      <p class="text-center italic text-lg transition-opacity duration-500":class="{'opacity-0': !showQuote, 'opacity-100': showQuote}">
+        "{{ famousQuotes[currentQuoteIndex] }}"
+      </p>
+    </section>
     <footer class="bg-primary border-t border-border text-white px-8 py-6">
       <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <p class="text-sm">&copy; 2026 The Pro Shop. All rights reserved.</p>
@@ -35,10 +39,36 @@
 import { authState } from '../services/authentication.js';
 
 export default {
+  data(){
+    return{
+      famousQuotes: [
+        "Success in this game depends less on strength of body than strength of mind and character. - Arnold Palmer",
+        "Golf is a game of inches. The most important are the six inches between your ears. - Bobby Jones",
+        "You swing your best when you have the fewest things to think about. - Bobby Jones",
+        "You don't know what pressure is until you play for five bucks with only two in your pocket. - Lee Trevino",
+        "Hit the shot you know you can hit, not the one you think you should. - Dr. Bob Rotella",
+        "If you think it's hard to meet new people, try picking up the wrong golf ball. - Jack Lemmon",
+        "They call it golf because all the other four-letter words were taken. - Raymond Floyd",
+        "Every golfer can expect to have four bad shots in a round. - Walter Hagen",
+        "Placing the ball in the right position for the next shot is eighty percent of winning golf. - Ben Hogan"
+      ],
+      currentQuoteIndex: 0,
+      showQuote: true
+    }
+  },
   computed: {
     isLoggedIn() {
       return authState.isLoggedIn;
     }
+  },
+  mounted(){
+    setInterval(() => {
+    this.showQuote = false;
+    setTimeout(() => {
+    this.currentQuoteIndex = (this.currentQuoteIndex + 1) & this.famousQuotes.length;
+    this.showQuote = true;
+    },500);
+    }, 5000);
   },
   methods: {
     logout() {
