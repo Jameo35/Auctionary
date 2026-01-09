@@ -1,8 +1,8 @@
 <template>
   <div class="home">
     <div class="page-title">
-      <h1 v-if="isLoggedIn">Welcome back to the Pro Shop!</h1>
-      <h1 v-else>Welcome to the Pro Shop!</h1>
+      <h1 class="text-3xl font-bold underline" v-if="isLoggedIn">Welcome back to the Pro Shop!</h1>
+      <h1 class="text-3xl font-bold underline" v-else>Welcome to the Pro Shop!</h1>
     </div>
     <div class="search-box card">
       <input
@@ -15,7 +15,7 @@
       <button class="clear-btn" @click="clearSearch">Clear</button>
     </div>
     <div class ="content">
-      <section class="AuctionList card">
+      <section class="flex-[2] self-start AuctionList card">
         <h1> Recently Added Auctions </h1>
         <p v-if="!isLoggedIn"> To browse more items at once and with more search options, please log in or sign up!</p>
         <p v-else> To Browse with more functionality please use the <router-link to="/browse" class="item-link">Browse</router-link> page </p>
@@ -46,7 +46,7 @@
                 <strong>Error: </strong> {{ error }}
             </div>
       </section>
-      <div class="Login" v-if="!isLoggedIn">
+      <div class="flex-1 self-start min-w-[320px] Login" v-if="!isLoggedIn">
         <Login />
       </div>
     </div>
