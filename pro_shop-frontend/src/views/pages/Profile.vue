@@ -11,7 +11,7 @@
     />
 
     <ItemList 
-      :title="`Items ${seller.first_name} has bid on (Open)`"
+      :title="`All items ${seller.first_name} has bid on (Open)`"
       :items="activeBids"
       noItemsMessage="This user has no bids on open items."
     />
@@ -79,7 +79,6 @@ methods: {
         user_id: user.user_id
       };
       const now = Date.now();
-      console.log(now);
       this.items = user.selling || [];
 
       const allBiddingItems = user.bidding_on || [];

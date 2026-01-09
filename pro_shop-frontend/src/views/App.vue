@@ -1,11 +1,13 @@
 <template>
-  <div class="flex flex-col min-h-screen">
+  <div class="flex flex-col min-h-screen min-w-screen">
     <nav class="bg-primary border-b border-border px-8 py-6 shadow-md flex items-center justify-between gap-6">
-      <div class="shrink-0 flex items-center gap-4">
+      <div class="flex items-center gap-4 shrink-0">
         <img src="@/assets/logo.png" alt="Pro Shop Logo" class="h-25 w-25 rounded-full object-cover" />
       </div>
-      <h1 class="absolute left-1/2 transform -translate-x-1/2 text-5xl font-bold text-accent">The Pro Shop</h1>
-      <div class="flex items-center gap-4">
+      <div class="flex-1 text-center md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
+      <h1 class="text-4xl md:text-4xl font-bold text-accent">The Pro Shop</h1>
+      </div>
+      <div class="flex flex-wrap items-center gap-4 ml-auto">
       <router-link to="/" class="nav-link">Home</router-link>
       <router-link v-if="isLoggedIn" to="/browse" class="nav-link">Browse</router-link>
       <router-link v-if="!isLoggedIn" to="/signup" class="nav-link">Sign Up</router-link>
