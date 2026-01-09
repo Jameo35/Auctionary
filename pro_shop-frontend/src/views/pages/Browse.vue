@@ -1,11 +1,8 @@
 <template>
   <div class="home">
-    <div class="page-title">
-      <h1>Browse Auctions</h1>
-    </div>
-
     <div class ="content">
       <section class="flex-2 self-start AuctionList card">
+        <h1>Browse All Auctions</h1>
         <div class="search-box card">
           <input
             type="text"
@@ -37,16 +34,17 @@
           <button @click="queryItems">Search</button>
           <button class="clear-btn" @click="clearSearch">Clear</button>
         </div>
-        <h1>Browse All Auctions</h1>
         <em v-if="loading">Loading...</em>
-          <table v-if="items.length" class="items-table">
+          <table v-if="items.length" class="items-table table-fixed w-full">
             <thead>
               <tr>
-                <th class="w-3/10 min-w-50">Item</th>
-                <th class="w-1/5 min-w-50">Seller</th>
-                <th class="w-1/10 min-w-50">Current Bid</th>
-                <th class="w-1/5 min-w-50">Auction Start Date & Time</th>
-                <th class="w-1/5 min-w-50">Auction End Date & Time</th>
+                <th class="w-1/7">Item</th>
+                <th class="w-1/7">Description</th>
+                <th class="w-1/7">Seller</th>
+                <th class="w-1/7">Current Bid</th>
+                <th class="w-1/7">Auction Start Date</th>
+                <th class="w-1/7">Auction End Date</th>
+                <th class="w-1/7">Time Remaining</th>
               </tr>
             </thead>
             <tbody>
@@ -158,6 +156,7 @@ export default {
         this.searchQuery = "";
         this.statusFilter = "";
         this.selectedCategory = "";
+        this.limit="20";
         this.queryItems();
       },
       nextPage() {

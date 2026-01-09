@@ -73,7 +73,7 @@
 }
 @layer components {
   .nav-link {
-    @apply font-medium text-accent no-underline transition-colors duration-200 ease-in-out;
+    @apply font-medium text-accent no-underline transition-colors duration-200 ease-in-out text-2xl;
   }
   .nav-link:hover {
     color: var(--color-primary-hover);

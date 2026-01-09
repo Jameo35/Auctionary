@@ -1,6 +1,7 @@
-const { use } = require('chai');
 const users = require('../model/user.server.model');
 const joi = require('joi');
+const Filter = require('bad-words');
+const filter = new Filter();
 
 
 const createUser = (req, res) => {
@@ -12,10 +13,14 @@ const createUser = (req, res) => {
   });
 
   const { error } = schema.validate(req.body);
+  const { first_name, last_name, email, password } = req.body;
+
+  if(filter.isProfane(first_name) || filter.isProfane(last_name) || filter.isProfane(email)){
+    return  res.status(400).json({ error_message: 'Inappropriate language is not allowed in account details.' });
+  }
 
   if (error) return res.status(400).json({ error_message: error.details[0].message });
 
-  const { first_name, last_name, email, password } = req.body;
   users.addNewUser({ first_name, last_name, email, password }, (err, user_id) => {
     if (err) {
         if (err.message === 'Email already exists') {

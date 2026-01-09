@@ -26,7 +26,20 @@
         <div v-else>
             <h2>You are already logged in.</h2>
         </div>
+        <div v-if="showSuccess" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+            <div class="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-2xl animate-fadeIn">
+            <h2>Account Created</h2>
+            <p>Your account has been created now to get into the Swing of things!</p>
+            <p>Redirecting to login in {{ redirectCountdown }} seconds...</p>
+            <button
+                @click="$router.push('/login')"            
+            >
+                Go to Login
+            </button>
+        </div>
     </div>
+    </div>
+
 </template>
 <script>
 import { userService } from '@/services/userService';
@@ -41,7 +54,11 @@ import { auth } from '@/services/authentication.js';
                 submitted: false,
                 success: "",
                 error: "",
-                isLoggedIn: false
+                isLoggedIn: false,
+                showSuccess: false,
+                redirectCountdown: 5,
+                firstName: "",
+                lastName: ""
             }
         },
         methods: {
@@ -69,14 +86,25 @@ import { auth } from '@/services/authentication.js';
                 }
                 userService.signup(firstName, lastName, email, password)
                     .then(() => {
-                        console.log("Signup successful")
-                        this.success = "Account created successfully. You can now log in."
+                        this.showSuccess = true;
+                        this.redirectCountdown = 3;
+                        const countdownInterval = setInterval(() => {
+                            this.redirectCountdown--;
+                            if (this.redirectCountdown <= 0) {
+                                clearInterval(countdownInterval);
+                                this.$router.push('/login');
+                            }
+                        }, 1000);
+                        // console.log("Signup successful")
+                        // this.success = "Account created successfully. You can now log in."
                         this.firstName = ""
                         this.lastName = ""
                         this.submitted = false
                         this.email = ""
                         this.password = ""
                         this.confirmPassword = ""
+                        // this.$router.push('/login')
+
                     })
                     .catch((err) => {
                         this.error = err

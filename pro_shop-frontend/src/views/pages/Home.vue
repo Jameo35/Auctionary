@@ -1,33 +1,24 @@
 <template>
-  <div class="home">
-    <div class="page-title">
-      <h1 class="text-3xl font-bold underline" v-if="isLoggedIn">Welcome back to the Pro Shop!</h1>
-      <h1 class="text-3xl font-bold underline" v-else>Welcome to the Pro Shop!</h1>
-    </div>
-    <div class ="content">
-      <section class="flex-2 self-start AuctionList card">
-        <div class="search-box card">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Search auctions..."
-            @keyup.enter="queryItems"
-          />
-          <button @click="queryItems">Search</button>
-          <button class="clear-btn" @click="clearSearch">Clear</button>
-        </div>
+  <div class="home flex flex-col flex-1 gap-4 ">
+    <section class="justify-center text-center pb-0 pt-5">
+      <h1> Welcome to the Pro Shop, time to really get into the swing of things! </h1>
+      <p v-if="!isLoggedIn"> To browse more items at once and with more search options, please log in or sign up.</p>
+      <p v-else> To Browse with more functionality please use the <router-link to="/browse" class="item-link">Browse</router-link> page.</p>
+    </section>
+    <div class ="content flex flex-wrap gap-4 pt-0 pb-0">
+      <section class="flex-3 self-start AuctionList card p-4">
         <h1> Recently Added Auctions </h1>
-        <p v-if="!isLoggedIn"> To browse more items at once and with more search options, please log in or sign up!</p>
-        <p v-else> To Browse with more functionality please use the <router-link to="/browse" class="item-link">Browse</router-link> page </p>
         <em v-if="loading">Loading...</em>
-          <table v-if="items.length" class="items-table">
+          <table v-if="items.length" class="items-table table-fixed">
             <thead>
               <tr>
-                <th class="w-1/5">Item</th>
-                <th class="w-1/5">Seller</th>
-                <th class="w-1/5">Current Bid</th>
-                <th class="w-1/5">Auction Start Date & Time</th>
-                <th class="w-1/5">Auction End Date & Time</th>
+                <th class="w-1/7">Item</th>
+                <th class="w-1/7">Description</th>
+                <th class="w-1/7">Seller</th>
+                <th class="w-1/7">Current Bid</th>
+                <th class="w-1/7">Auction Start Date</th>
+                <th class="w-1/7">Auction End Date</th>
+                <th class="w-1/7">Time Remaining</th>
               </tr>
             </thead>
             <tbody>

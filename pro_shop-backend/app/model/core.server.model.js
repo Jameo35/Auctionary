@@ -267,10 +267,6 @@ const searchItems = (query, done) => {
     }
 
     sql += ' ORDER BY i.start_date DESC';
-
-    console.log(user_id);
-    console.log(params);
-
         db.all(sql, params, (err, rows) => {
         if (err) {
             console.log(err);

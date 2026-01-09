@@ -10,7 +10,7 @@ const createItem = (req, res) => {
     description: joi.string().min(1).max(500).required(),
     starting_bid: joi.number().min(0).required(),
     end_date: joi.number().required(),
-    categories: joi.array().items(joi.number().integer()).min(1).optional()
+    categories: joi.array().items(joi.number().integer()).optional()
     });
     const { error } = schema.validate(req.body);
     if (error) return res.status(400).json({ error_message: error.details[0].message });

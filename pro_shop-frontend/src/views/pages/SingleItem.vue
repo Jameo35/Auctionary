@@ -1,6 +1,6 @@
 <template>
-  <div class="item-page">
-    <div class="item-details-container">
+  <div class="item-page flex flex-1">
+    <div class="item-details-container flex-1 flex flex-col gap-6">
       <div class="item-details">
         <button class="back-btn" @click="goBack">Back</button>
 
@@ -87,7 +87,7 @@
       </div>
     </div>
 
-    <div class="side-panel" v-if="item && Object.keys(item).length">
+    <div class="side-panel w-1/4 shrink-0 flex flex-col gap-6" v-if="item && Object.keys(item).length">
       <div class="card seller-card">
         <h2>Seller Details</h2>
         <p><strong>Name:</strong> {{ item.first_name }} {{ item.last_name }}</p>

@@ -1,5 +1,5 @@
 <template>
-  <div class="profile-page">
+  <div class="profile-page flex flex-col flex-1">
     <h1>{{ seller.first_name }} {{ seller.last_name }}'s Items</h1>
     <em v-if="loading">Loading...</em>
     <div v-if="error" class="error">{{ error }}</div>
@@ -15,7 +15,6 @@
       :items="activeBids"
       noItemsMessage="No items found for this seller."
     />
-
 
     <ItemList 
       :title="`Items ${seller.first_name} has bidded on (Ended)`"
