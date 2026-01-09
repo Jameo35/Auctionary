@@ -38,13 +38,13 @@
           <table v-if="items.length" class="items-table table-fixed w-full">
             <thead>
               <tr>
-                <th class="w-1/7">Item</th>
-                <th class="w-1/7">Description</th>
+                <th class="w-3/7">Item</th>
+                <th class="w-3/7">Description</th>
                 <th class="w-1/7">Seller</th>
                 <th class="w-1/7">Current Bid</th>
-                <th class="w-1/7">Auction Start Date</th>
-                <th class="w-1/7">Auction End Date</th>
-                <th class="w-1/7">Time Remaining</th>
+                <th class="w-2/7">Auction Start Date</th>
+                <th class="w-2/7">Auction End Date</th>
+                <th class="w-2/7">Time Remaining</th>
               </tr>
             </thead>
             <tbody>
@@ -156,7 +156,8 @@ export default {
         this.searchQuery = "";
         this.statusFilter = "";
         this.selectedCategory = "";
-        this.limit="20";
+        this.limit=20;
+        this.offset=0;
         this.queryItems();
       },
       nextPage() {
