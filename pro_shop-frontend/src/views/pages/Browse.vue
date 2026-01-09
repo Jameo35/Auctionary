@@ -3,49 +3,50 @@
     <div class="page-title">
       <h1>Browse Auctions</h1>
     </div>
-    <div class="search-box card">
-      <input
-        type="text"
-        v-model="searchQuery"
-        placeholder="Search auctions..."
-        @keyup.enter="queryItems(true)"
-      />
-      <select v-model="statusFilter" class="styled-select">
-        <option value="">All Statuses</option>
-        <option value="BID">Items Bid On</option>
-        <option value="OPEN">Items Selling</option>
-        <option value="ARCHIVE">Ended Auctions</option>
-      </select>
 
-      <select v-model="selectedCategory" class="styled-select">
-        <option value="">All Categories</option>
-        <option v-for="category in categories" :key="category.category_id" :value="category.category_id">
-          {{ category.name }}
-        </option>
-      </select>
-
-      <select v-model.number="limit" class="styled-select">
-        <option :value="5">5</option>
-        <option :value="10">10</option>
-        <option :value="20">20</option>
-        <option :value="50">50</option>
-      </select>
-
-      <button @click="queryItems">Search</button>
-      <button class="clear-btn" @click="clearSearch">Clear</button>
-    </div>
     <div class ="content">
-      <section class="AuctionList card">
+      <section class="flex-2 self-start AuctionList card">
+        <div class="search-box card">
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Search auctions..."
+            @keyup.enter="queryItems(true)"
+          />
+          <select v-model="statusFilter" class="styled-select">
+            <option value="">All Statuses</option>
+            <option value="BID">Items Bid On</option>
+            <option value="OPEN">Items Selling</option>
+            <option value="ARCHIVE">Ended Auctions</option>
+          </select>
+
+          <select v-model="selectedCategory" class="styled-select">
+            <option value="">All Categories</option>
+            <option v-for="category in categories" :key="category.category_id" :value="category.category_id">
+              {{ category.name }}
+            </option>
+          </select>
+
+          <select v-model.number="limit" class="styled-select">
+            <option :value="5">5</option>
+            <option :value="10">10</option>
+            <option :value="20">20</option>
+            <option :value="50">50</option>
+          </select>
+
+          <button @click="queryItems">Search</button>
+          <button class="clear-btn" @click="clearSearch">Clear</button>
+        </div>
         <h1>Browse All Auctions</h1>
         <em v-if="loading">Loading...</em>
           <table v-if="items.length" class="items-table">
             <thead>
               <tr>
-                <th>Item</th>
-                <th>Seller</th>
-                <th>Current Bid</th>
-                <th>Auction Start Date & Time</th>
-                <th>Auction End Date & Time</th>
+                <th class="w-3/10 min-w-50">Item</th>
+                <th class="w-1/5 min-w-50">Seller</th>
+                <th class="w-1/10 min-w-50">Current Bid</th>
+                <th class="w-1/5 min-w-50">Auction Start Date & Time</th>
+                <th class="w-1/5 min-w-50">Auction End Date & Time</th>
               </tr>
             </thead>
             <tbody>

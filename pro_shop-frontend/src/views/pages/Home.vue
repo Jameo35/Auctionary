@@ -4,18 +4,18 @@
       <h1 class="text-3xl font-bold underline" v-if="isLoggedIn">Welcome back to the Pro Shop!</h1>
       <h1 class="text-3xl font-bold underline" v-else>Welcome to the Pro Shop!</h1>
     </div>
-    <div class="search-box card">
-      <input
-        type="text"
-        v-model="searchQuery"
-        placeholder="Search auctions..."
-        @keyup.enter="queryItems"
-      />
-      <button @click="queryItems">Search</button>
-      <button class="clear-btn" @click="clearSearch">Clear</button>
-    </div>
     <div class ="content">
-      <section class="flex-[2] self-start AuctionList card">
+      <section class="flex-2 self-start AuctionList card">
+        <div class="search-box card">
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Search auctions..."
+            @keyup.enter="queryItems"
+          />
+          <button @click="queryItems">Search</button>
+          <button class="clear-btn" @click="clearSearch">Clear</button>
+        </div>
         <h1> Recently Added Auctions </h1>
         <p v-if="!isLoggedIn"> To browse more items at once and with more search options, please log in or sign up!</p>
         <p v-else> To Browse with more functionality please use the <router-link to="/browse" class="item-link">Browse</router-link> page </p>
@@ -23,11 +23,11 @@
           <table v-if="items.length" class="items-table">
             <thead>
               <tr>
-                <th>Item</th>
-                <th>Seller</th>
-                <th>Current Bid</th>
-                <th>Auction Start Date & Time</th>
-                <th>Auction End Date & Time</th>
+                <th class="w-1/5">Item</th>
+                <th class="w-1/5">Seller</th>
+                <th class="w-1/5">Current Bid</th>
+                <th class="w-1/5">Auction Start Date & Time</th>
+                <th class="w-1/5">Auction End Date & Time</th>
               </tr>
             </thead>
             <tbody>
