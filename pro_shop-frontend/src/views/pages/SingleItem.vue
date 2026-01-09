@@ -15,7 +15,7 @@
           <p>Auction Started: {{ new Date(item.start_date).toLocaleString() }}</p>
           <p>Auction Ends: {{ new Date(item.end_date).toLocaleString() }}</p>
           <p>Current Bid Holder: 
-            <span v-if="item.current_bid_holder">
+            <span v-if="item.current_bid_holder" class="item-link text-accent underline hover:text-text">
               <router-link :to="`/profile/${item.current_bid_holder.user_id}`">
                 {{ item.current_bid_holder.first_name }} {{ item.current_bid_holder.last_name }}
               </router-link>
@@ -43,7 +43,7 @@
           <em v-if="loadingBids">Loading...</em>
 
           <ul v-else-if="bids.length">
-            <li v-for="bid in bids.slice(-5).reverse()" :key="bid.bid_id">
+            <li v-for="bid in bids.slice(0,5)" :key="bid.bid_id">
               {{ bid.first_name }} {{ bid.last_name }}
               bid £{{ bid.amount }}
               on {{ new Date(bid.timestamp).toLocaleString() }}
@@ -90,10 +90,12 @@
     <div class="side-panel w-1/4 shrink-0 flex flex-col gap-6" v-if="item && Object.keys(item).length">
       <div class="card seller-card">
         <h2>Seller Details</h2>
-        <p><strong>Name:</strong> {{ item.first_name }} {{ item.last_name }}</p>
+        <p><strong>Name: </strong>{{ item.first_name }} {{ item.last_name }}</p>
+        <p class="item-link text-accent underline hover:text-text">
         <router-link :to="`/profile/${item.creator_id}`">
           See this seller's profile
         </router-link>
+        </p>
       </div>
 
       <div class="card bid-form-card" v-if="!isAuctionActive">
@@ -113,6 +115,17 @@
 
           <button type="submit">Place Bid</button>
         </form>
+      </div>
+      <div class="card ended-auction" v-if="isAuctionActive">
+        <h2>This Auction has ended.</h2>
+        <div v-if="item.current_bid_holder">
+        <p> <strong>{{ item.current_bid_holder.first_name }} {{ item.current_bid_holder.last_name }}</strong> won this item.</p>
+        <p> The winning bid was £{{ item.current_bid }}.</p>
+        <p> The auction ended {{ new Date(item.end_date).toLocaleString() }}.</p>
+        </div>
+        <div v-else>
+          <p><strong>No Bids were placed on this item.</strong></p>
+        </div>
       </div>
 
       <div class="card question-form-card" v-if="!isAuctionActive">
@@ -191,6 +204,9 @@ export default {
         .then(() => {
           this.bidSuccess = "Bid placed successfully!";
           this.bidAmount = null;
+          setTimeout(() => {
+          this.bidSuccess = ''
+          }, 3000)
           return Promise.all([coreService.getBidHistory(this.$route.params.id), coreService.getSingleItem(this.$route.params.id)]);
         })
         .then(([bids, item]) => {
@@ -199,6 +215,9 @@ export default {
         })
         .catch(error => {
           this.bidError = error;
+          setTimeout(() => {
+          this.bidError = ''
+          }, 3000)
         });
       } ,
     submitQuestion() {
@@ -208,6 +227,9 @@ export default {
         .then(() => {
           this.questionSuccess = "Question submitted successfully!";
           this.newQuestion = "";
+          setTimeout(() => {
+          this.questionSuccess = ''
+          }, 3000)
           return coreService.getQuestionsForItem(this.$route.params.id);
         })
         .then((questions) => {
@@ -215,6 +237,9 @@ export default {
         })
         .catch(error => {
           this.questionError = error;
+          setTimeout(() => {
+          this.questionError = ''
+          }, 3000)
         });
     },
     submitAnswer(questionId) {
@@ -232,6 +257,9 @@ export default {
         })
         .catch(error => {
           this.errorQuestions = error;
+          setTimeout(() => {
+          this.errorQuestions = ''
+          }, 3000)
         });
     }
   },

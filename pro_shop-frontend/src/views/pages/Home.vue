@@ -7,7 +7,7 @@
     </section>
     <div class ="content flex flex-wrap gap-4 pt-0 pb-0">
       <section class="flex-3 self-start AuctionList card p-4">
-        <h1> Recently Added Auctions </h1>
+        <h1 class="text-center"> Recently Added Auctions </h1>
         <em v-if="loading">Loading...</em>
           <table v-if="items.length" class="items-table table-fixed">
             <thead>
@@ -29,8 +29,8 @@
                 />
             </tbody>
           </table>
-          <div v-else>
-            No auctions found.
+          <div v-else class="justify-center">
+            No auctions found. Why don't you tee off and get some items listed?
           </div>
             <div v-if="error">
                 <strong>Error: </strong> {{ error }}

@@ -9,13 +9,13 @@ const isAuthenticated = function(req, res, next) {
   }
 
     users.getIdByToken(token, (err, user_id) => {
-        if (err || user_id === null) {
+        if (err || user_id === null) { 
             return res.status(401).json({ error_message: 'Unauthorised: Invalid Token' });
         }
         req.user_id = user_id;
         next();
     });
-};
+}; 
 
 const searchAuthentication = function(req, res, next) {
     let token = req.headers['x-authorization'];

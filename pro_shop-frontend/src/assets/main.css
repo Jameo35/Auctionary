@@ -64,7 +64,7 @@
   }
 
   button {
-    @apply w-full mt-6 px-[0.7rem] py-[0.7rem] bg-primary text-white font-semibold rounded-md border-none cursor-pointer transition-colors duration-200 ease-in-out;
+    @apply w-full mt-6 px-[0.7rem] py-[0.7rem] bg-primary text-white font-semibold rounded-md border-none cursor-pointer transition-colors duration-200 ease-in-out h-10 px-3;
   }
 
   button:hover {

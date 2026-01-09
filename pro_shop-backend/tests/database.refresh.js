@@ -66,40 +66,24 @@ db.run(sql, [], function(err){
                                 console.log("Questions: reset ID counter")
                                 count++
 
-                                const sql = "DELETE FROM categories";
+                                const sql = "DELETE FROM item_categories";
                                 db.run(sql, [], function(err){
                                     if(err) throw err
 
-                                    console.log("Categories: All data deleted")
+                                    console.log("Item Categories: All data deleted")
                                     count++
 
-                                    const sql = "UPDATE `sqlite_sequence` SET `seq` = 0 WHERE `name` = 'categories'";
+                                    const sql = "UPDATE `sqlite_sequence` SET `seq` = 0 WHERE `name` = 'item_categories'";
                                     db.run(sql, [], function(err){
                                         if(err) throw err
-                                
-                                        console.log("Categories: reset ID counter")
+
+                                        console.log("Item Categories: reset ID counter")
                                         count++
 
-                                        const sql = "DELETE FROM item_categories";
-                                        db.run(sql, [], function(err){
-                                            if(err) throw err
 
-                                            console.log("Item Categories: All data deleted")
-                                            count++
-
-                                            const sql = "UPDATE `sqlite_sequence` SET `seq` = 0 WHERE `name` = 'item_categories'";
-                                            db.run(sql, [], function(err){
-                                                if(err) throw err
-
-                                                console.log("Item Categories: reset ID counter")
-                                                count++
-
-
-                                                console.log("All data deleted from all tables")      
-                                                console.log("****************************************")
-                                            }) 
-                                        })
-                                    })
+                                        console.log("All data deleted from all tables")      
+                                        console.log("****************************************")
+                                    }) 
                                 })
                             })
                         })

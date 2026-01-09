@@ -7,17 +7,17 @@
     <ItemList 
       :title="'Items for Sale'"
       :items="items"
-      noItemsMessage="No items found for this seller."
+      noItemsMessage="This user has no items for sale."
     />
 
     <ItemList 
-      :title="`Items ${seller.first_name} is Bidding On`"
+      :title="`Items ${seller.first_name} has bid on (Open)`"
       :items="activeBids"
-      noItemsMessage="No items found for this seller."
+      noItemsMessage="This user has no bids on open items."
     />
 
     <ItemList 
-      :title="`Items ${seller.first_name} has bidded on (Ended)`"
+      :title="`Items ${seller.first_name} has bid on (Ended)`"
       :items="endedBids"
       noItemsMessage="No ended bids found for this user."
     />
@@ -25,7 +25,7 @@
     <ItemList 
       :title="`${seller.first_name}'s ended Auctions`"
       :items="auctions_ended"
-      noItemsMessage="This seller has no ended auctions."
+      noItemsMessage="This user has no ended auctions."
     />
   </div>
 </template>
