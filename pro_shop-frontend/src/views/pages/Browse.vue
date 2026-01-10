@@ -4,7 +4,7 @@
       <section class="flex-2 self-start AuctionList card">
         <h1>Browse All Auctions</h1>
         <p>Use the search box below to search items!</p>
-        <div class="search-box card p-4 flex-1 flex-grow gap-4 items-end">
+        <div class="search-box card p-4 flex-1 grow gap-4 items-end">
           <input type="text" v-model="searchQuery" placeholder="Search auctions..." @keyup.enter="queryItems(true)" class="h-10 px-3" />
           <div>
             <p class="text-center">Filter by Status</p>

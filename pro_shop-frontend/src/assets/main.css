@@ -241,15 +241,21 @@
   }
 
   .custom-select {
-    @apply w-full max-w-75 mx-auto font-sans;
+    @apply border rounded p-2 w-full h-40 overflow-y-auto;
   }
 
   .custom-select select {
-    @apply w-full px-3 py-2 rounded-md border border-black bg-white text-black text-sm cursor-pointer outline-none box-border resize-none h-37.5 transition-all duration-200;
+    @apply w-full px-3 py-2 rounded-md border border-primary bg-card text-black text-sm cursor-pointer outline-none box-border resize-none h-37.5 transition-all duration-200;
   }
 
   .custom-select select option {
-    @apply px-2 py-1 text-sm bg-white text-black;
+    @apply px-2 py-1 text-sm bg-card text-text;
+  }
+  .custom-select:focus { 
+    @apply text-primary border-primary ring-1 ring-primary; 
+  }
+  select.custom-select option:checked {
+     @apply bg-primary text-white; 
   }
 }
 

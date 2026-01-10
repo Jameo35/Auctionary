@@ -51,9 +51,9 @@
                 <input type="datetime-local" name="end_date" v-model="end_date" />
                 <div v-if="submitted && !end_date">End date is required</div>
 
-                <label for="categories">Categories</label>
-                <div class="custom-select">
-                    <select multiple v-model="selected_categories">
+                <div class="flex-col justify-center">
+                    <label for="categories">Categories</label>
+                    <select multiple v-model="selected_categories" class="custom-select">
                         <option v-for="category in categories" :key="category.category_id" :value="category.category_id">
                             {{ category.name }}
                         </option>
