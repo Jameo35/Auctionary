@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col min-h-screen min-w-screen">
-    <nav class="bg-primary border-b border-border px-8 py-6 shadow-md flex items-center justify-between gap-6">
+    <nav class="bg-primary border-b border-border px-6 py-2 shadow-md flex items-center justify-between gap-6">
       <div class="flex items-center gap-4 shrink-0">
-        <img src="@/assets/logo.png" alt="Pro Shop Logo" class="h-25 w-25 rounded-full object-cover" />
+        <img src="@/assets/logo.png" alt="Pro Shop Logo" class="h-20 w-20 rounded-full object-cover" />
       </div>
       <div class="flex-1 text-center md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
       <h1 class="text-4xl md:text-4xl font-bold text-accent">The Pro Shop</h1>
@@ -11,7 +11,7 @@
       <router-link to="/" class="nav-link">Home</router-link>
       <router-link v-if="isLoggedIn" to="/browse" class="nav-link">Browse</router-link>
       <router-link v-if="!isLoggedIn" to="/signup" class="nav-link">Sign Up</router-link>
-      <router-link v-if="isLoggedIn" to="/profile" class="nav-link">Profile</router-link>
+      <router-link v-if="isLoggedIn" to="/profile" class="nav-link">My Profile</router-link>
       <router-link v-if="!isLoggedIn" to="/login" class="nav-link">Login</router-link>
       <router-link v-if="isLoggedIn" to="/new-listing" class="nav-link">New Listing</router-link>
       <a class="nav-link" v-if="isLoggedIn" href="#" @click.prevent="logout">Logout</a>

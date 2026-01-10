@@ -37,7 +37,7 @@
           <div>
             <p>Sort page results</p>
           <select v-model="sortBy" class="styled-select">
-            <option value="">Most Recent</option>
+            <option value="">Most Recently Listed</option>
             <option value="low">Lowest Bid</option>
             <option value="high">Highest Bid</option>
             <option value="endDate">Ending Soon</option>
@@ -111,10 +111,9 @@ export default {
       items: [],
       error: "",
       loading: true,
-      isLoggedIn: false,
       searchQuery: "",
       statusFilter: "",
-      categoriesList: [],
+      categories: [],
       selectedCategory: "",
       limit: 20,
       offset: 0,

@@ -57,8 +57,7 @@ export default {
     return {
       items: [],
       error: "",
-      loading: true,
-      isLoggedIn: false
+      loading: true
     }
   },
   mounted() {
