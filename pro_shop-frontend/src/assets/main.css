@@ -73,7 +73,7 @@
 }
 @layer components {
   .nav-link {
-    @apply text-accent no-underline transition-colors duration-200 ease-in-out font-extrabold text-lg;
+    @apply text-accent no-underline transition-colors duration-200 ease-in-out;
   }
   .nav-link:hover {
     @apply text-white transition-all duration-400
@@ -229,7 +229,7 @@
   }
 
   .styled-select {
-    @apply px-3 py-2 rounded border border-black bg-primary text-white font-sans text-sm cursor-pointer outline-none transition-all duration-200 ease-in-out;
+    @apply px-3 py-2 h-10 rounded border border-black bg-primary text-white font-sans text-sm cursor-pointer outline-none transition-all duration-200 ease-in-out;
   }
 
   .styled-select:hover {

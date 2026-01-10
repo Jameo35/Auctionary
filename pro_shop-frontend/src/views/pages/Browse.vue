@@ -3,31 +3,53 @@
     <div class ="content">
       <section class="flex-2 self-start AuctionList card">
         <h1>Browse All Auctions</h1>
-        <div class="search-box card">
+        <p>Use the search box below to search items!</p>
+        <div class="search-box card p-4 flex-1 flex-grow gap-4 items-end">
           <input type="text" v-model="searchQuery" placeholder="Search auctions..." @keyup.enter="queryItems(true)" class="h-10 px-3" />
-          <select v-model="statusFilter" class="styled-select h-10 px-3">
+          <div>
+            <p class="text-center">Filter by Status</p>
+          <select v-model="statusFilter" class="styled-select">
             <option value="">All Statuses</option>
             <option value="BID">Items Bid On</option>
             <option value="OPEN">Items Selling</option>
             <option value="ARCHIVE">Ended Auctions</option>
           </select>
+          </div>
 
-          <select v-model="selectedCategory" class="styled-select h-10 px-3">
+          <div>
+            <p class="text-center">Filter by Category</p>
+          <select v-model="selectedCategory" class="styled-select">
             <option value="">All Categories</option>
             <option v-for="category in categories" :key="category.category_id" :value="category.category_id">
               {{ category.name }}
             </option>
           </select>
-
-          <select v-model.number="limit" class="styled-select h-10 px-3">
+          </div>
+          <div>
+            <p>Results Per Page</p>
+          <select v-model.number="limit" class="styled-select w-full">
             <option :value="5">5</option>
             <option :value="10">10</option>
             <option :value="20">20</option>
             <option :value="50">50</option>
           </select>
-
+          </div>
+          <div>
+            <p>Sort page results</p>
+          <select v-model="sortBy" class="styled-select">
+            <option value="">Most Recent</option>
+            <option value="low">Lowest Bid</option>
+            <option value="high">Highest Bid</option>
+            <option value="endDate">Ending Soon</option>
+            <option value="startDate">Oldest Auctions</option>
+          </select>
+          </div>
           <button class="button mt-0" @click="queryItems">Search</button>
           <button class="button mt-0" @click="clearSearch">Clear</button>
+          <div class="flex items-center gap-1">
+            <label for="hideEnded" class="text-primary text-xl">Hide Ended Auctions</label>
+            <input type="checkbox" id="hideEnded" v-model="hideEnded" class="h-7 w-7"/>
+          </div>
         </div>
         <em v-if="loading">Loading...</em>
           <table v-if="items.length" class="items-table table-fixed w-full">
@@ -44,7 +66,7 @@
             </thead>
             <tbody>
                 <ItemRow
-                  v-for="item in items"
+                  v-for="item in sortedItems"
                   :key="item.item_id"
                   :item="item"
                 />
@@ -96,8 +118,9 @@ export default {
       selectedCategory: "",
       limit: 20,
       offset: 0,
-      hasNextPage: true
-
+      hasNextPage: true,
+      sortBy: "",
+      hideEnded: false
     }
   },
   mounted() {
@@ -115,6 +138,29 @@ export default {
   computed:{
     isLoggedIn(){
       return auth.isAuthenticated();
+    },
+    sortedItems(){
+      let sortedItems = [...this.items];
+
+      if(this.hideEnded){
+        sortedItems = sortedItems.filter(item => item.end_date > Date.now())
+      }
+
+      switch (this.sortBy){
+        case "low":
+          sortedItems.sort((a,b) => a.current_bid - b.current_bid);
+          break;
+        case "high":
+          sortedItems.sort((a,b) => b.current_bid - a.current_bid);
+          break;
+        case "endDate":
+          sortedItems.sort((a,b) => a.end_date - b.end_date);
+          break;
+        case "startDate":
+          sortedItems.sort((a,b) => a.start_date - b.start_date);
+          break;
+      }
+      return sortedItems;
     }
   },
   methods: {
@@ -153,6 +199,8 @@ export default {
         this.selectedCategory = "";
         this.limit=20;
         this.offset=0;
+        this.sortBy="";
+        this.hideEnded=false;
         this.queryItems();
       },
       nextPage() {

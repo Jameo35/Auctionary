@@ -256,8 +256,7 @@ const searchItems = (query, done) => {
         params.push(currentTime);
         params.push(user_id);
     } else if (status === 'BID') {
-        sql += ' AND i.end_date > ? AND b.user_id = ?';
-        params.push(currentTime);
+        sql += ' AND b.user_id = ?';
         params.push(user_id);
     }
 

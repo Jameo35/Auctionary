@@ -4,6 +4,8 @@ const joi = require('joi');
 const Filter = require('bad-words');
 const filter = new Filter();
 
+filter.removeWords('balls', 'ball');
+
 const createItem = (req, res) => {
   const schema = joi.object({
     name: joi.string().min(1).max(100).required(),
