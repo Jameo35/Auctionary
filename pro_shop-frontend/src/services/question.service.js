@@ -15,6 +15,7 @@ const submitQuestion = (itemId, questionText) => {
     .then(response => {
         return response.json().then(data => {
         if (response.status === 200){
+            console.log("Question submitted successfully.")
             return data;
         }else{
             return Promise.reject(data.error_message);

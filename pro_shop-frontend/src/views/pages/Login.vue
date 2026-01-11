@@ -34,8 +34,7 @@ import * as EmailValidator from 'email-validator';
                 email:"",
                 password: "",
                 submitted: false,
-                isLoggedIn: false
-
+                error: ""
             }
         },
         props: {

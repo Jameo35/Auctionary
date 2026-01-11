@@ -10,9 +10,9 @@
             <p class="text-center">Filter by Status</p>
           <select v-model="statusFilter" class="styled-select">
             <option value="">All Statuses</option>
-            <option value="BID">Items Bid On</option>
-            <option value="OPEN">Items Selling</option>
-            <option value="ARCHIVE">Ended Auctions</option>
+            <option value="BID">Items I've Bid On</option>
+            <option value="OPEN">Items I'm Selling</option>
+            <option value="ARCHIVE">My Ended Auctions</option>
           </select>
           </div>
 
@@ -181,15 +181,18 @@ export default {
             if (items.length > this.limit) {
                     this.hasNextPage = true;
                     this.items = items.slice(0, this.limit);
+                    console.log('Fetched items:', items);
                   } else {
                     this.hasNextPage = false;
                     this.items = items;
+                    console.log('Fetched items:', items);
                   }
                   this.loading = false;
                 })
                 .catch(error => {
                   this.error = error;
                   this.loading = false;
+                  console.log('Error:', error);
                 });
       },
       clearSearch(){

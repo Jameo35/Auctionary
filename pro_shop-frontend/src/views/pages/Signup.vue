@@ -95,16 +95,13 @@ import { auth } from '@/services/authentication.js';
                                 this.$router.push('/login');
                             }
                         }, 1000);
-                        // console.log("Signup successful")
-                        // this.success = "Account created successfully. You can now log in."
+                        console.log("Signup successful")
                         this.firstName = ""
                         this.lastName = ""
                         this.submitted = false
                         this.email = ""
                         this.password = ""
                         this.confirmPassword = ""
-                        // this.$router.push('/login')
-
                     })
                     .catch((err) => {
                         this.error = err

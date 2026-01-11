@@ -68,7 +68,9 @@ export default {
         this.loading = false;
         console.log('Fetched items:', items);
       })
-      .catch(error => this.error = error)
+      .catch(error => this.error = "Failed to connect to backend service")
+      this.loading = false;
+
   },
   computed:{
     isLoggedIn(){
@@ -76,24 +78,28 @@ export default {
     }
   },
   methods: {
-    queryItems(){
-        const q = this.searchQuery.trim() || undefined;
-        this.loading = true;
-        this.error = "";
-        coreService.searchItems({q, limit: 5})
-          .then(items => {
-            this.items = items;
-            this.loading = false;
-          })
-          .catch(error => {
-            this.error = error;
-            this.loading = false;
-          });
-      },
-    clearSearch(){
-      this.searchQuery = "";
-      this.queryItems();
-    }
+    // queryItems(){
+    //     const q = this.searchQuery.trim() || undefined;
+    //     this.loading = true;
+    //     this.error = "";
+    //     coreService.searchItems({q, limit: 5})
+    //       .then(items => {
+    //         this.items = items;
+    //         this.loading = false;
+    //         console.log('Fetched items:', items);
+
+    //       })
+    //       .catch(error => {
+    //         this.error = error;
+    //         this.loading = false;
+    //         console.log('Error:', error);
+
+    //       });
+    //   },
+    // clearSearch(){
+    //   this.searchQuery = "";
+    //   this.queryItems();
+    // }
   }
 }
 </script>

@@ -16,7 +16,6 @@ const addNewItem = (item, done) => {
 
 const checkDateValidity = (end_date) => {
     const currentDate = Date.now();
-    console.log('Current Date:', currentDate, 'End Date:', end_date);
     return end_date > currentDate;
 };
 
@@ -200,47 +199,10 @@ const searchItems = (query, done) => {
     if (status && user_id === null) {
         return done(400);
     }
-    let sql = `
-    SELECT 
-        i.item_id,
-        i.name,
-        i.description,
-        i.starting_bid,
-        i.start_date,
-        i.end_date,
-        i.creator_id,
-        u.first_name AS creator_first_name,
-        u.last_name AS creator_last_name,
-        b.amount AS current_bid,
-        c.category_id,
-        c.name AS category_name
-        FROM (
-        SELECT DISTINCT
-            i.item_id
-        FROM items i
-        ORDER BY i.start_date DESC
-        LIMIT ? OFFSET ?
-    ) limited_items
-    JOIN items i ON i.item_id = limited_items.item_id
-    JOIN users u ON i.creator_id = u.user_id
-    LEFT JOIN (
-        SELECT b1.*
-        FROM bids b1
-        JOIN (
-            SELECT item_id, MAX(amount) AS max_amount
-            FROM bids
-            GROUP BY item_id
-        ) b2 ON b1.item_id = b2.item_id AND b1.amount = b2.max_amount
-    ) b ON b.item_id = i.item_id
-    LEFT JOIN item_categories ic ON i.item_id = ic.item_id
-    LEFT JOIN categories c ON ic.category_id = c.category_id
-    WHERE 1=1
-    `;
+
+    let sql = ` WITH filtered AS ( SELECT DISTINCT i.item_id FROM items i LEFT JOIN item_categories ic ON i.item_id = ic.item_id LEFT JOIN categories c ON ic.category_id = c.category_id LEFT JOIN ( SELECT b1.* FROM bids b1 JOIN ( SELECT item_id, MAX(amount) AS max_amount FROM bids GROUP BY item_id ) b2 ON b1.item_id = b2.item_id AND b1.amount = b2.max_amount ) b ON b.item_id = i.item_id WHERE 1=1 `;
 
     const params = [];
-    params.push(parseInt(limit, 10));
-    params.push(parseInt(offset, 0));
-
     if (q) {
         sql += ' AND (i.name LIKE ?)';
         params.push(`%${q}%`);
@@ -265,7 +227,10 @@ const searchItems = (query, done) => {
         params.push(category);
     }
 
-    sql += ' ORDER BY i.start_date DESC';
+    sql += ` ORDER BY i.start_date DESC LIMIT ? OFFSET ? ) SELECT i.item_id, i.name, i.description, i.starting_bid, i.start_date, i.end_date, i.creator_id, u.first_name AS creator_first_name, u.last_name AS creator_last_name, b.amount AS current_bid, c.category_id, c.name AS category_name FROM filtered f JOIN items i ON i.item_id = f.item_id JOIN users u ON i.creator_id = u.user_id LEFT JOIN ( SELECT b1.* FROM bids b1 JOIN ( SELECT item_id, MAX(amount) AS max_amount FROM bids GROUP BY item_id ) b2 ON b1.item_id = b2.item_id AND b1.amount = b2.max_amount ) b ON b.item_id = i.item_id LEFT JOIN item_categories ic ON i.item_id = ic.item_id LEFT JOIN categories c ON ic.category_id = c.category_id ORDER BY i.start_date DESC `;
+    params.push(parseInt(limit, 10));
+    params.push(parseInt(offset, 0));
+
         db.all(sql, params, (err, rows) => {
         if (err) {
             console.log(err);

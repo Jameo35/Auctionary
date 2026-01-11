@@ -134,8 +134,6 @@ import { draftService } from '@/services/draft.service.js';
                     end_date: endDateEpoch,
                     categories: selected_categories
                 };
-
-                console.log(itemData);
                 coreService.createItem(itemData)
                     .then(() => {
                         this.success = "Item created successfully!";
@@ -145,6 +143,8 @@ import { draftService } from '@/services/draft.service.js';
                         this.selected_categories = [];
                         this.end_date = '';
                         this.submitted = false;
+                        console.log('Created item: ', itemData);
+
                     })
                     .catch((err) => {
                         this.error = err;
