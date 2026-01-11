@@ -200,7 +200,7 @@ const searchItems = (query, done) => {
         return done(400);
     }
 
-    let sql = ` WITH filtered AS ( SELECT DISTINCT i.item_id FROM items i LEFT JOIN item_categories ic ON i.item_id = ic.item_id LEFT JOIN categories c ON ic.category_id = c.category_id LEFT JOIN ( SELECT b1.* FROM bids b1 JOIN ( SELECT item_id, MAX(amount) AS max_amount FROM bids GROUP BY item_id ) b2 ON b1.item_id = b2.item_id AND b1.amount = b2.max_amount ) b ON b.item_id = i.item_id WHERE 1=1 `;
+    let sql = ` WITH filtered AS ( SELECT DISTINCT i.item_id FROM items i LEFT JOIN item_categories ic ON i.item_id = ic.item_id LEFT JOIN categories c ON ic.category_id = c.category_id LEFT JOIN ( SELECT b1.* FROM bids b1 JOIN ( SELECT item_id, MAX(amount) AS max_amount FROM bids GROUP BY item_id ) b2 ON b1.item_id = b2.item_id AND b1.amount = b2.max_amount ) b ON b.item_id = i.item_id LEFT JOIN bids ub ON ub.item_id = i.item_id WHERE 1=1 `;
 
     const params = [];
     if (q) {
@@ -218,7 +218,7 @@ const searchItems = (query, done) => {
         params.push(currentTime);
         params.push(user_id);
     } else if (status === 'BID') {
-        sql += ' AND b.user_id = ?';
+        sql += ' AND ub.user_id = ?';
         params.push(user_id);
     }
 
